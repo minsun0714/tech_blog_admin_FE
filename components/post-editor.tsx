@@ -11,11 +11,24 @@ import Image from "next/image";
 import { ChangeEvent, DragEvent, useEffect, useMemo, useRef, useState } from "react";
 import { UploadedImage, useEditorStore } from "@/stores/editor-store";
 
+async function getErrorDetail(response: Response) {
+  const contentType = response.headers.get("content-type") ?? "";
+
+  if (contentType.includes("application/json")) {
+    const body = await response.json();
+    return body?.message ? `: ${body.message}` : "";
+  }
+
+  const text = await response.text();
+  return text ? `: ${text}` : "";
+}
+
 async function fetchUploads(): Promise<UploadedImage[]> {
   const response = await fetch("/api/uploads", { cache: "no-store" });
 
   if (!response.ok) {
-    throw new Error("이미지 목록을 불러오지 못했습니다.");
+    const detail = await getErrorDetail(response);
+    throw new Error(`이미지 목록 조회 실패 (HTTP ${response.status})${detail}`);
   }
 
   return response.json();
@@ -31,7 +44,8 @@ async function uploadImage(file: File): Promise<UploadedImage> {
   });
 
   if (!response.ok) {
-    throw new Error("이미지 업로드에 실패했습니다.");
+    const detail = await getErrorDetail(response);
+    throw new Error(`이미지 업로드 실패 (HTTP ${response.status})${detail}`);
   }
 
   return response.json();
@@ -44,8 +58,11 @@ const columns: ColumnDef<UploadedImage>[] = [
   },
   {
     accessorKey: "size",
-    header: "크기(KB)",
-    cell: ({ row }) => `${Math.max(1, Math.round(row.original.size / 1024))}`,
+    header: "크기",
+    cell: ({ row }) =>
+      row.original.size < 1024
+        ? `${row.original.size}B`
+        : `${(row.original.size / 1024).toFixed(1)}KB`,
   },
   {
     accessorKey: "uploadedAt",
@@ -119,9 +136,15 @@ export default function PostEditor() {
   );
 
   const handleFiles = (files: FileList | File[]) => {
-    Array.from(files)
-      .filter((file) => file.type.startsWith("image/"))
-      .forEach((file) => uploadMutation.mutate(file));
+    const imageFiles = Array.from(files).filter((file) => file.type.startsWith("image/"));
+
+    if (imageFiles.length === 0) {
+      setErrorMessage("이미지 파일만 업로드할 수 있습니다.");
+      return;
+    }
+
+    setErrorMessage(null);
+    imageFiles.forEach((file) => uploadMutation.mutate(file));
   };
 
   const onFileInput = (event: ChangeEvent<HTMLInputElement>) => {
@@ -220,7 +243,7 @@ export default function PostEditor() {
                 <Image
                   key={url}
                   src={url}
-                  alt="업로드 미리보기"
+                  alt={`업로드 이미지 ${url.split("/").pop() ?? ""}`}
                   width={320}
                   height={144}
                   className="h-36 w-full rounded-lg object-cover"

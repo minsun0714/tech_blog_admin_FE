@@ -17,21 +17,28 @@ export async function GET() {
       files.map(async (fileName) => {
         const fullPath = path.join(uploadsDir, fileName);
         const fileStat = await stat(fullPath);
+        const uploadedAt = fileStat.mtime.toISOString();
+        const uploadedAtTs = fileStat.mtimeMs;
 
         return {
           id: fileName,
           fileName,
           url: `/uploads/${fileName}`,
           size: fileStat.size,
-          uploadedAt: fileStat.mtime.toISOString(),
+          uploadedAt,
+          uploadedAtTs,
         };
       }),
     );
 
-    fileDetails.sort((a, b) => +new Date(b.uploadedAt) - +new Date(a.uploadedAt));
-    return NextResponse.json(fileDetails);
-  } catch {
-    return NextResponse.json([], { status: 200 });
+    fileDetails.sort((a, b) => b.uploadedAtTs - a.uploadedAtTs);
+    return NextResponse.json(fileDetails.map(({ uploadedAtTs, ...item }) => item));
+  } catch (error) {
+    console.error("Failed to read uploads:", error);
+    return NextResponse.json(
+      { message: "이미지 목록을 불러오는 중 오류가 발생했습니다." },
+      { status: 500 },
+    );
   }
 }
 
