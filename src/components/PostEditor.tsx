@@ -1,5 +1,3 @@
-"use client";
-
 import { useEditorStore } from "@/stores/editor-store";
 
 export default function PostEditor() {
@@ -11,7 +9,7 @@ export default function PostEditor() {
         <p className="text-sm font-medium text-violet-700">Tech Blog Admin</p>
         <h1 className="text-3xl font-bold tracking-tight">게시물 에디터</h1>
         <p className="text-sm text-slate-600">
-          가장 가벼운 방식으로 Next.js 기본 textarea를 에디터로 사용하고 실시간 미리보기를
+          가장 가벼운 방식으로 React 기본 textarea를 에디터로 사용하고 실시간 미리보기를
           제공합니다.
         </p>
       </header>
