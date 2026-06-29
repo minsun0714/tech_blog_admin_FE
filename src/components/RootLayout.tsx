@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom";
 
 const NAV_ITEMS = [
+  { to: "/", label: "대시보드", end: true },
   { to: "/posts", label: "게시글 열람" },
   { to: "/tags", label: "태그 관리" },
   { to: "/categories", label: "카테고리 관리" },
@@ -16,10 +17,11 @@ export default function RootLayout() {
         </p>
         <p className="mb-8 text-lg font-bold text-slate-900">Admin</p>
         <nav className="space-y-1">
-          {NAV_ITEMS.map(({ to, label }) => (
+          {NAV_ITEMS.map(({ to, label, end }) => (
             <NavLink
               key={to}
               to={to}
+              end={end}
               className={({ isActive }) =>
                 [
                   "block rounded-xl px-4 py-2.5 text-sm font-medium transition",

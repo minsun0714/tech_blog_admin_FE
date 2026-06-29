@@ -1,18 +1,27 @@
+import { useNavigate } from "react-router-dom";
 import { useEditorStore } from "@/stores/editor-store";
 
 export default function PostEditor() {
   const { title, content, setTitle, setContent } = useEditorStore();
+  const navigate = useNavigate();
 
   return (
-    <main className="mx-auto min-h-screen max-w-7xl space-y-6 bg-gradient-to-b from-violet-50 to-white p-4 text-slate-900 md:p-8">
-      <header className="space-y-2">
-        <p className="text-sm font-medium text-violet-700">Tech Blog Admin</p>
-        <h1 className="text-3xl font-bold tracking-tight">게시물 에디터</h1>
-        <p className="text-sm text-slate-600">
-          가장 가벼운 방식으로 React 기본 textarea를 에디터로 사용하고 실시간 미리보기를
-          제공합니다.
-        </p>
-      </header>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900">게시물 작성</h2>
+          <p className="text-sm text-slate-500">
+            React 기본 textarea로 작성하고 실시간으로 미리봅니다.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="rounded-xl border border-violet-200 px-4 py-2.5 text-sm font-semibold text-violet-700 transition hover:bg-violet-50"
+        >
+          목록으로
+        </button>
+      </div>
 
       <section className="grid gap-6 lg:grid-cols-2">
         <article className="space-y-4 rounded-2xl border border-violet-100 bg-white p-5 shadow-sm">
@@ -48,6 +57,6 @@ export default function PostEditor() {
           </p>
         </article>
       </section>
-    </main>
+    </div>
   );
 }
