@@ -254,9 +254,9 @@ export default function CategoriesPage() {
     },
   });
 
-  const updatingCategoryId = updateNameMutation.isPending ? updateNameMutation.variables?.id ?? null : null;
+  const updatingCategoryId = updateNameMutation.isPending ? updateNameMutation.variables?.id : null;
   const changingParentCategoryId = changeParentMutation.isPending
-    ? changeParentMutation.variables?.id ?? null
+    ? changeParentMutation.variables?.id
     : null;
   const deletingCategoryId = deleteMutation.isPending ? deleteMutation.variables ?? null : null;
 
