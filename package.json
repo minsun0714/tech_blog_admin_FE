@@ -10,6 +10,8 @@
     "lint": "eslint src --ext ts,tsx"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.101.2",
+    "axios": "^1.18.1",
     "react": "^18",
     "react-dom": "^18",
     "react-router-dom": "^7.18.0",
