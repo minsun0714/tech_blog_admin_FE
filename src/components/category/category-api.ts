@@ -51,7 +51,7 @@ function normalizeCategory(raw: unknown): Category | null {
 }
 
 function buildCategoryTree(categories: Category[]) {
-  const categoryMap = new Map(
+  const categoryMap = new Map<number, Category>(
     categories.map((category) => [
       category.id,
       {

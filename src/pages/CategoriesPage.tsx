@@ -18,17 +18,17 @@ function CategoryTreeItem({
   onUpdateName,
   onChangeParent,
   onDelete,
-  isUpdatingName,
-  isChangingParent,
-  isDeleting,
+  updatingCategoryId,
+  changingParentCategoryId,
+  deletingCategoryId,
 }: {
   category: Category;
   onUpdateName: (id: number, name: string) => void;
   onChangeParent: (id: number, parentId: number | null) => void;
   onDelete: (id: number) => void;
-  isUpdatingName: boolean;
-  isChangingParent: boolean;
-  isDeleting: boolean;
+  updatingCategoryId: number | null;
+  changingParentCategoryId: number | null;
+  deletingCategoryId: number | null;
 }) {
   const [isEditingName, setIsEditingName] = useState(false);
   const [isParentEditorOpen, setIsParentEditorOpen] = useState(false);
@@ -39,6 +39,10 @@ function CategoryTreeItem({
     setDraftName(category.name);
     setParentIdInput(category.parentId?.toString() ?? "");
   }, [category.name, category.parentId]);
+
+  const isUpdatingName = updatingCategoryId === category.id;
+  const isChangingParent = changingParentCategoryId === category.id;
+  const isDeleting = deletingCategoryId === category.id;
 
   const submitName = () => {
     const trimmedName = draftName.trim();
@@ -102,10 +106,14 @@ function CategoryTreeItem({
             ) : (
               <Badge
                 className="cursor-text select-none"
-                onDoubleClick={() => setIsEditingName(true)}
+                onDoubleClick={() => {
+                  if (!isUpdatingName) {
+                    setIsEditingName(true);
+                  }
+                }}
                 title="더블클릭해서 이름 수정"
               >
-                {category.name}
+                {isUpdatingName ? "수정 중..." : category.name}
               </Badge>
             )}
             <span className="text-xs text-slate-400">ID {category.id}</span>
@@ -177,9 +185,9 @@ function CategoryTreeItem({
               onUpdateName={onUpdateName}
               onChangeParent={onChangeParent}
               onDelete={onDelete}
-              isUpdatingName={isUpdatingName}
-              isChangingParent={isChangingParent}
-              isDeleting={isDeleting}
+              updatingCategoryId={updatingCategoryId}
+              changingParentCategoryId={changingParentCategoryId}
+              deletingCategoryId={deletingCategoryId}
             />
           ))}
         </ul>
@@ -245,6 +253,12 @@ export default function CategoriesPage() {
       setFeedback("카테고리 삭제에 실패했습니다.");
     },
   });
+
+  const updatingCategoryId = updateNameMutation.isPending ? updateNameMutation.variables?.id ?? null : null;
+  const changingParentCategoryId = changeParentMutation.isPending
+    ? changeParentMutation.variables?.id ?? null
+    : null;
+  const deletingCategoryId = deleteMutation.isPending ? deleteMutation.variables ?? null : null;
 
   const handleCreateCategory = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -328,9 +342,9 @@ export default function CategoriesPage() {
                     changeParentMutation.mutate({ id, parentId: nextParentId })
                   }
                   onDelete={(id) => deleteMutation.mutate(id)}
-                  isUpdatingName={updateNameMutation.isPending}
-                  isChangingParent={changeParentMutation.isPending}
-                  isDeleting={deleteMutation.isPending}
+                  updatingCategoryId={updatingCategoryId}
+                  changingParentCategoryId={changingParentCategoryId}
+                  deletingCategoryId={deletingCategoryId}
                 />
               ))}
             </ul>
