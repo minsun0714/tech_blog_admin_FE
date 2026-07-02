@@ -29,10 +29,10 @@ export default function SeriesUpdateForm() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const parsedId = Number(id);
+    const normalizedId = id.trim();
     const trimmedName = name.trim();
 
-    if (!Number.isInteger(parsedId) || parsedId <= 0) {
+    if (!/^\d+$/.test(normalizedId)) {
       setFeedback("올바른 시리즈 ID를 입력해주세요.");
       return;
     }
@@ -43,7 +43,7 @@ export default function SeriesUpdateForm() {
     }
 
     setFeedback(null);
-    updateMutation.mutate({ id: parsedId, name: trimmedName });
+    updateMutation.mutate({ id: Number.parseInt(normalizedId, 10), name: trimmedName });
   };
 
   return (
