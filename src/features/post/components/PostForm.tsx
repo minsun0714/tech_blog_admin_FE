@@ -17,6 +17,7 @@ import {
   useUpdatePostMutation,
 } from "@/features/post/hooks/use-posts";
 import { useSeriesQuery } from "@/features/series/hooks/use-series";
+import { insertAtPosition } from "@/lib/utils";
 import { useEditorStore } from "@/stores/editor-store";
 
 interface PostFormProps {
@@ -24,10 +25,6 @@ interface PostFormProps {
 }
 
 const NONE_VALUE = "__none__";
-
-function insertAtPosition(content: string, insertText: string, position: number) {
-  return `${content.slice(0, position)}${insertText}${content.slice(position)}`;
-}
 
 export default function PostForm({ postId }: PostFormProps) {
   const navigate = useNavigate();

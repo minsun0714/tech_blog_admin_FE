@@ -20,9 +20,12 @@ export default function MarkdownEditor({ value, onChange, onImageDrop }: Markdow
     }
 
     const files = Array.from(event.dataTransfer.files).filter((file) => file.type.startsWith("image/"));
-    const cursorPosition = event.currentTarget.selectionStart ?? value.length;
+    let cursorPosition = event.currentTarget.selectionStart ?? value.length;
 
-    files.forEach((file) => onImageDrop(file, cursorPosition));
+    files.forEach((file) => {
+      onImageDrop(file, cursorPosition);
+      cursorPosition += 1;
+    });
   };
 
   return (

@@ -14,7 +14,7 @@ type TagStore = {
   removeTag: (id: number) => void;
 };
 
-const createLocalTagId = () => -Date.now() - Math.floor(Math.random() * 1000);
+const createPlaceholderTagId = () => -(Date.now() + Math.floor(Math.random() * 1000));
 
 export const useTagStore = create<TagStore>((set) => ({
   tags: [],
@@ -34,7 +34,7 @@ export const useTagStore = create<TagStore>((set) => ({
     })),
 }));
 
-function extractTagId(headers: unknown, fallbackName: string) {
+function extractTagId(headers: unknown, _fallbackName: string) {
   const rawHeaders = headers as
     | { location?: string; Location?: string; get?: (name: string) => string | null | undefined }
     | undefined;
@@ -45,7 +45,7 @@ function extractTagId(headers: unknown, fallbackName: string) {
     return Number.parseInt(matchedId, 10);
   }
 
-  return createLocalTagId() - fallbackName.length;
+  return createPlaceholderTagId();
 }
 
 export function useCreateTagMutation() {

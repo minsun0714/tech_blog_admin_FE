@@ -24,7 +24,7 @@ function parsePostIdFromLocation(location: string | null) {
 export function usePostsByCategoryQuery(categoryId: number | null) {
   return useQuery({
     queryKey: ["posts", "category", categoryId],
-    queryFn: () => getPostsByCategory(categoryId as number),
+    queryFn: () => getPostsByCategory(categoryId!),
     enabled: categoryId !== null,
   });
 }
@@ -32,7 +32,7 @@ export function usePostsByCategoryQuery(categoryId: number | null) {
 export function usePostsBySeriesQuery(seriesId: number | null) {
   return useQuery({
     queryKey: ["posts", "series", seriesId],
-    queryFn: () => getPostsBySeries(seriesId as number),
+    queryFn: () => getPostsBySeries(seriesId!),
     enabled: seriesId !== null,
   });
 }
