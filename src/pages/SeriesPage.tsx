@@ -1,5 +1,5 @@
-import SeriesCreateForm from "@/components/series/SeriesCreateForm";
-import SeriesUpdateForm from "@/components/series/SeriesUpdateForm";
+import SeriesCreateForm from "@/features/series/components/SeriesCreateForm";
+import SeriesList from "@/features/series/components/SeriesList";
 
 export default function SeriesPage() {
   return (
@@ -11,7 +11,7 @@ export default function SeriesPage() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <SeriesCreateForm />
-        <SeriesUpdateForm />
+        <SeriesList />
       </div>
     </div>
   );
