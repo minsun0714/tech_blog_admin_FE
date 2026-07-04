@@ -1,7 +1,5 @@
-import { FormEvent, useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { Button } from "@/components/ui/Button";
-import { API_KEY_SESSION_STORAGE_KEY } from "@/lib/http";
+import MainHeader from "@/components/layout/MainHeader";
 
 const NAV_ITEMS = [
   { to: "/", label: "대시보드", end: true },
@@ -12,37 +10,6 @@ const NAV_ITEMS = [
 ];
 
 export default function RootLayout() {
-  const [apiKey, setApiKey] = useState("");
-  const trimmedApiKey = apiKey.trim();
-
-  useEffect(() => {
-    try {
-      setApiKey(sessionStorage.getItem(API_KEY_SESSION_STORAGE_KEY) ?? "");
-    } catch {
-      setApiKey("");
-    }
-  }, []);
-
-  const clearApiKey = () => {
-    try {
-      sessionStorage.removeItem(API_KEY_SESSION_STORAGE_KEY);
-    } catch {}
-    setApiKey("");
-  };
-
-  const handleApiKeySubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (trimmedApiKey) {
-      try {
-        sessionStorage.setItem(API_KEY_SESSION_STORAGE_KEY, trimmedApiKey);
-      } catch {
-        return;
-      }
-      setApiKey(trimmedApiKey);
-    }
-  };
-
   return (
     <div className="flex min-h-screen bg-gradient-to-b from-violet-50 to-white">
       <aside className="w-56 shrink-0 border-r border-violet-100 bg-white px-4 py-8 shadow-sm">
@@ -72,31 +39,7 @@ export default function RootLayout() {
       </aside>
 
       <main className="flex-1 p-8">
-        <header className="mb-6 flex justify-end">
-          <form
-            onSubmit={handleApiKeySubmit}
-            className="flex w-full max-w-xl items-end gap-3 rounded-2xl border border-violet-100 bg-white p-4 shadow-sm"
-          >
-            <label className="flex-1 space-y-1 text-sm text-slate-600">
-              <span>X-API-KEY</span>
-              <input
-                value={apiKey}
-                onChange={(event) => setApiKey(event.target.value)}
-                type="password"
-                placeholder="API 키를 입력하세요"
-                className="h-10 w-full rounded-xl border border-violet-100 px-3 text-sm text-slate-900 outline-none transition focus:border-violet-400"
-              />
-            </label>
-            <div className="flex items-center gap-2">
-              <Button type="submit" disabled={!trimmedApiKey}>
-                저장
-              </Button>
-              <Button type="button" variant="outline" onClick={clearApiKey}>
-                삭제
-              </Button>
-            </div>
-          </form>
-        </header>
+        <MainHeader />
         <Outlet />
       </main>
     </div>

@@ -1,6 +1,5 @@
 import axios from "axios";
-
-export const API_KEY_SESSION_STORAGE_KEY = "apiKey";
+import { getApiKeyFromSessionStorage } from "@/lib/api-key";
 
 export const http = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -10,13 +9,19 @@ export const http = axios.create({
 });
 
 http.interceptors.request.use((config) => {
-  const apiKey = sessionStorage.getItem(API_KEY_SESSION_STORAGE_KEY);
+  const requestMethod = config.method?.toLowerCase();
+  const headers = axios.AxiosHeaders.from(config.headers);
 
-  if (apiKey) {
-    config.headers["X-API-KEY"] = apiKey;
-  } else {
-    delete config.headers["X-API-KEY"];
+  if (requestMethod !== "get") {
+    const apiKey = getApiKeyFromSessionStorage();
+
+    if (apiKey) {
+      headers.set("X-API-KEY", apiKey);
+    } else {
+      headers.delete("X-API-KEY");
+    }
   }
 
+  config.headers = headers;
   return config;
 });

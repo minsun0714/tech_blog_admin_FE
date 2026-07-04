@@ -1,5 +1,5 @@
-import PostEditor from "@/components/PostEditor";
+import PostForm from "@/features/post/components/PostForm";
 
 export default function PostNewPage() {
-  return <PostEditor />;
+  return <PostForm />;
 }
