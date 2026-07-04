@@ -4,13 +4,15 @@ import {
   setApiKeyToSessionStorage,
 } from "@/lib/api-key";
 
+const API_KEY_DEBOUNCE_MS = 200;
+
 export default function ApiKeyInputBar() {
   const [apiKey, setApiKey] = useState(() => getApiKeyFromSessionStorage());
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
       setApiKeyToSessionStorage(apiKey);
-    }, 200);
+    }, API_KEY_DEBOUNCE_MS);
 
     return () => {
       window.clearTimeout(timeoutId);
