@@ -1,10 +1,11 @@
 import * as React from "react";
+import { cn } from "@/lib/utils";
 
 type ButtonVariant = "default" | "outline";
 type ButtonSize = "default" | "sm";
 
 const baseClassName =
-  "inline-flex items-center justify-center rounded-xl text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50";
+  "inline-flex items-center justify-center rounded-xl text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-2";
 
 const variantClassName: Record<ButtonVariant, string> = {
   default: "bg-violet-600 text-white shadow-sm hover:bg-violet-700",
@@ -15,10 +16,6 @@ const sizeClassName: Record<ButtonSize, string> = {
   default: "h-10 px-4",
   sm: "h-9 px-3",
 };
-
-function cn(...classes: Array<string | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
