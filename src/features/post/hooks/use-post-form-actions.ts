@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUploadPostImageMutation } from "@/features/post/hooks/use-post-image";
 import {
@@ -24,13 +24,16 @@ export function usePostFormActions({ postId }: UsePostFormActionsOptions = {}) {
   const updateMutation = useUpdatePostMutation();
   const uploadImageMutation = useUploadPostImageMutation();
 
-  const payload = {
-    title: title.trim(),
-    content,
-    tagNames,
-    categoryId,
-    seriesId,
-  };
+  const payload = useMemo(
+    () => ({
+      title: title.trim(),
+      content,
+      tagNames,
+      categoryId,
+      seriesId,
+    }),
+    [title, content, tagNames, categoryId, seriesId],
+  );
 
   const validatePayload = () => {
     if (!payload.title) {
