@@ -8,9 +8,9 @@ export default function ApiKeyInputBar() {
   const [apiKey, setApiKey] = useState(() => getApiKeyFromSessionStorage());
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const normalizedApiKey = event.target.value.trim();
-    setApiKey(normalizedApiKey);
-    setApiKeyToSessionStorage(normalizedApiKey);
+    const nextApiKey = event.target.value;
+    setApiKey(nextApiKey);
+    setApiKeyToSessionStorage(nextApiKey);
   };
 
   return (
