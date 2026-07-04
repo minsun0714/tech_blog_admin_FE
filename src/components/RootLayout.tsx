@@ -13,28 +13,34 @@ const NAV_ITEMS = [
 
 export default function RootLayout() {
   const [apiKey, setApiKey] = useState("");
+  const trimmedApiKey = apiKey.trim();
 
   useEffect(() => {
-    setApiKey(sessionStorage.getItem(API_KEY_SESSION_STORAGE_KEY) ?? "");
+    try {
+      setApiKey(sessionStorage.getItem(API_KEY_SESSION_STORAGE_KEY) ?? "");
+    } catch {
+      setApiKey("");
+    }
   }, []);
 
   const clearApiKey = () => {
-    sessionStorage.removeItem(API_KEY_SESSION_STORAGE_KEY);
+    try {
+      sessionStorage.removeItem(API_KEY_SESSION_STORAGE_KEY);
+    } catch {}
     setApiKey("");
   };
 
   const handleApiKeySubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const trimmedApiKey = apiKey.trim();
-
     if (trimmedApiKey) {
-      sessionStorage.setItem(API_KEY_SESSION_STORAGE_KEY, trimmedApiKey);
+      try {
+        sessionStorage.setItem(API_KEY_SESSION_STORAGE_KEY, trimmedApiKey);
+      } catch {
+        return;
+      }
       setApiKey(trimmedApiKey);
-      return;
     }
-
-    clearApiKey();
   };
 
   return (
@@ -82,7 +88,9 @@ export default function RootLayout() {
               />
             </label>
             <div className="flex items-center gap-2">
-              <Button type="submit">저장</Button>
+              <Button type="submit" disabled={!trimmedApiKey}>
+                저장
+              </Button>
               <Button type="button" variant="outline" onClick={clearApiKey}>
                 삭제
               </Button>
