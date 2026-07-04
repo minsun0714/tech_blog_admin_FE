@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "default" | "outline";
+type ButtonVariant = "default" | "outline" | "saved";
 type ButtonSize = "default" | "sm";
 
 const baseClassName =
@@ -10,6 +10,7 @@ const baseClassName =
 const variantClassName: Record<ButtonVariant, string> = {
   default: "bg-violet-600 text-white shadow-sm hover:bg-violet-700",
   outline: "border border-violet-200 bg-white text-violet-700 hover:bg-violet-50",
+  saved: "bg-emerald-100 text-emerald-700 cursor-default",
 };
 
 const sizeClassName: Record<ButtonSize, string> = {

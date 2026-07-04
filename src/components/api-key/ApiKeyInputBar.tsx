@@ -8,27 +8,27 @@ import {
 
 export default function ApiKeyInputBar() {
   const [apiKey, setApiKey] = useState(() => getApiKeyFromSessionStorage());
+  const [savedApiKey, setSavedApiKey] = useState(() => getApiKeyFromSessionStorage());
   const trimmedApiKey = apiKey.trim();
+  const isSaved = trimmedApiKey !== "" && trimmedApiKey === savedApiKey;
+  const hasUnsavedChanges = trimmedApiKey !== savedApiKey;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const nextApiKey = event.target.value;
-    setApiKey(nextApiKey);
+    setApiKey(event.target.value);
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!trimmedApiKey) {
-      return;
-    }
-
+    if (!trimmedApiKey) return;
     setApiKeyToSessionStorage(trimmedApiKey);
     setApiKey(trimmedApiKey);
+    setSavedApiKey(trimmedApiKey);
   };
 
   const handleRemove = () => {
     removeApiKeyFromSessionStorage();
     setApiKey("");
+    setSavedApiKey("");
   };
 
   return (
@@ -46,10 +46,21 @@ export default function ApiKeyInputBar() {
           spellCheck={false}
         />
       </label>
-      <Button type="submit" size="sm" disabled={!trimmedApiKey}>
-        저장
+      <Button
+        type="submit"
+        size="sm"
+        variant={isSaved ? "saved" : "default"}
+        disabled={!trimmedApiKey || !hasUnsavedChanges}
+      >
+        {isSaved ? "저장됨" : savedApiKey ? "수정" : "저장"}
       </Button>
-      <Button type="button" variant="outline" size="sm" onClick={handleRemove}>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={handleRemove}
+        disabled={!savedApiKey && !trimmedApiKey}
+      >
         삭제
       </Button>
     </form>
