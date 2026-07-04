@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import {
   getApiKeyFromSessionStorage,
   setApiKeyToSessionStorage,
@@ -8,8 +8,14 @@ const API_KEY_DEBOUNCE_MS = 200;
 
 export default function ApiKeyInputBar() {
   const [apiKey, setApiKey] = useState(() => getApiKeyFromSessionStorage());
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     const timeoutId = window.setTimeout(() => {
       setApiKeyToSessionStorage(apiKey);
     }, API_KEY_DEBOUNCE_MS);

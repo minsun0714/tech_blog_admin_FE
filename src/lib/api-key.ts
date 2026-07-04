@@ -17,5 +17,5 @@ export function setApiKeyToSessionStorage(apiKey: string) {
     return;
   }
 
-  window.sessionStorage.setItem(API_KEY_STORAGE_KEY, apiKey.trim());
+  window.sessionStorage.setItem(API_KEY_STORAGE_KEY, apiKey);
 }
