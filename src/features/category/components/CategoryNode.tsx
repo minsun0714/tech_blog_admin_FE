@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
 import type { CategoryNode as CategoryNodeType } from "@/features/category/category-api";
@@ -6,6 +7,8 @@ import {
   useDeleteCategoryMutation,
   useUpdateCategoryNameMutation,
 } from "@/features/category/hooks/use-categories";
+import { useCategoryDnd } from "@/features/category/components/CategoryDndProvider";
+import { cn } from "@/lib/utils";
 
 interface CategoryNodeProps {
   category: CategoryNodeType;
@@ -17,6 +20,10 @@ export default function CategoryNode({ category, depth = 0 }: CategoryNodeProps)
   const [name, setName] = useState(category.categoryName);
   const updateMutation = useUpdateCategoryNameMutation();
   const deleteMutation = useDeleteCategoryMutation();
+  const { draggedId, dropTargetId, setDropTargetId, onDragStart, onDragEnd, onDrop } = useCategoryDnd();
+
+  const isDragging = draggedId === category.categoryId;
+  const isDropTarget = dropTargetId === category.categoryId;
 
   const handleUpdate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -31,7 +38,38 @@ export default function CategoryNode({ category, depth = 0 }: CategoryNodeProps)
   };
 
   return (
-    <div className="space-y-3 rounded-xl border border-violet-100 bg-violet-50/40 p-4" style={{ marginLeft: depth * 16 }}>
+    <div
+      draggable
+      onDragStart={(e) => {
+        e.stopPropagation();
+        onDragStart(category.categoryId);
+      }}
+      onDragEnd={(e) => {
+        e.stopPropagation();
+        onDragEnd();
+      }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDropTargetId(category.categoryId);
+      }}
+      onDragLeave={(e) => {
+        if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget as Node)) {
+          setDropTargetId(null);
+        }
+      }}
+      onDrop={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onDrop(category.categoryId);
+      }}
+      className={cn(
+        "space-y-3 rounded-xl border border-violet-100 bg-violet-50/40 p-4 transition-all",
+        isDragging && "opacity-40",
+        isDropTarget && !isDragging && "border-violet-400 bg-violet-100 ring-2 ring-violet-300",
+      )}
+      style={{ marginLeft: depth * 16 }}
+    >
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         {isEditing ? (
           <form className="flex flex-1 gap-2" onSubmit={handleUpdate}>
@@ -41,9 +79,12 @@ export default function CategoryNode({ category, depth = 0 }: CategoryNodeProps)
             </Button>
           </form>
         ) : (
-          <div>
-            <p className="font-semibold text-slate-900">{category.categoryName}</p>
-            <p className="text-xs text-slate-500">ID {category.categoryId}</p>
+          <div className="flex items-center gap-2">
+            <GripVertical className="h-4 w-4 shrink-0 cursor-grab text-slate-300" />
+            <div>
+              <p className="font-semibold text-slate-900">{category.categoryName}</p>
+              <p className="text-xs text-slate-500">ID {category.categoryId}</p>
+            </div>
           </div>
         )}
 
