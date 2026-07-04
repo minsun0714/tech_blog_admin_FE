@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import {
   getApiKeyFromSessionStorage,
   setApiKeyToSessionStorage,
@@ -7,10 +7,19 @@ import {
 export default function ApiKeyInputBar() {
   const [apiKey, setApiKey] = useState(() => getApiKeyFromSessionStorage());
 
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setApiKeyToSessionStorage(apiKey);
+    }, 200);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [apiKey]);
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const nextApiKey = event.target.value;
     setApiKey(nextApiKey);
-    setApiKeyToSessionStorage(nextApiKey);
   };
 
   return (
