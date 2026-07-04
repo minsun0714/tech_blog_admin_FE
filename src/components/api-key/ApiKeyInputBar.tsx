@@ -31,7 +31,7 @@ export default function ApiKeyInputBar() {
   };
 
   return (
-    <section className="mb-4 rounded-xl border border-violet-100 bg-white px-3 py-2 shadow-sm">
+    <section className="w-full max-w-xs">
       <label className="flex items-center gap-2 text-xs font-medium text-slate-600" htmlFor="api-key">
         <span className="shrink-0">X-API-KEY</span>
         <input
