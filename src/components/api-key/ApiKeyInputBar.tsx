@@ -31,7 +31,7 @@ export default function ApiKeyInputBar() {
   };
 
   return (
-    <section className="w-full max-w-xs">
+    <div className="w-full max-w-xs">
       <label className="flex items-center gap-2 text-xs font-medium text-slate-600" htmlFor="api-key">
         <span className="shrink-0">X-API-KEY</span>
         <input
@@ -45,6 +45,6 @@ export default function ApiKeyInputBar() {
           spellCheck={false}
         />
       </label>
-    </section>
+    </div>
   );
 }
