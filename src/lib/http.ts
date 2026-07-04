@@ -12,7 +12,7 @@ http.interceptors.request.use((config) => {
   const headers = axios.AxiosHeaders.from(config.headers);
 
   if (requestMethod !== "get") {
-    const apiKey = getApiKeyFromSessionStorage().trim();
+    const apiKey = getApiKeyFromSessionStorage();
 
     if (apiKey) {
       headers.set("X-API-KEY", apiKey);
