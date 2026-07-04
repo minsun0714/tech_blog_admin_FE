@@ -18,6 +18,11 @@ export default function RootLayout() {
     setApiKey(sessionStorage.getItem(API_KEY_SESSION_STORAGE_KEY) ?? "");
   }, []);
 
+  const clearApiKey = () => {
+    sessionStorage.removeItem(API_KEY_SESSION_STORAGE_KEY);
+    setApiKey("");
+  };
+
   const handleApiKeySubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -29,8 +34,7 @@ export default function RootLayout() {
       return;
     }
 
-    sessionStorage.removeItem(API_KEY_SESSION_STORAGE_KEY);
-    setApiKey("");
+    clearApiKey();
   };
 
   return (
@@ -77,7 +81,12 @@ export default function RootLayout() {
                 className="h-10 w-full rounded-xl border border-violet-100 px-3 text-sm text-slate-900 outline-none transition focus:border-violet-400"
               />
             </label>
-            <Button type="submit">{apiKey.trim() ? "저장" : "초기화"}</Button>
+            <div className="flex items-center gap-2">
+              <Button type="submit">저장</Button>
+              <Button type="button" variant="outline" onClick={clearApiKey}>
+                삭제
+              </Button>
+            </div>
           </form>
         </header>
         <Outlet />
