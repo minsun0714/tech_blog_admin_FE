@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
+import ApiKeyInputBar from "@/components/api-key/ApiKeyInputBar";
 
 const NAV_ITEMS = [
   { to: "/", label: "대시보드", end: true },
@@ -38,6 +39,7 @@ export default function RootLayout() {
       </aside>
 
       <main className="flex-1 p-8">
+        <ApiKeyInputBar />
         <Outlet />
       </main>
     </div>
