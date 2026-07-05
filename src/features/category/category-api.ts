@@ -21,7 +21,7 @@ export const createCategory = (name: string, parentId: number | null) =>
 export const deleteCategory = (id: number) => http.delete(`/api/categories/${id}`);
 export const updateCategoryName = (id: number, name: string) =>
   http.patch(`/api/categories/${id}/name`, { name });
-export const changeCategoryParent = (id: number, parentId: number) =>
+export const changeCategoryParent = (id: number, parentId: number | null) =>
   http.patch(`/api/categories/${id}/parent`, { parentId });
 
 export function flattenCategories(categories: CategoryNode[], depth = 0): FlatCategory[] {

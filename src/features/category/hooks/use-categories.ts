@@ -48,7 +48,7 @@ export function useChangeCategoryParentMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, parentId }: { id: number; parentId: number }) => changeCategoryParent(id, parentId),
+    mutationFn: ({ id, parentId }: { id: number; parentId: number | null }) => changeCategoryParent(id, parentId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
