@@ -1,1 +1,1 @@
-export type FilterType = "category" | "series";
+export type FilterType = "category" | "series" | "tag";

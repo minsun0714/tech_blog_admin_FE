@@ -6,10 +6,11 @@ import {
   updateTag,
 } from "@/features/tag/tag-api";
 
-export function useFetchTags() {
+export function useFetchTags({ enabled }: { enabled: boolean }) {
   return useQuery({
     queryFn: fetchTags,
     queryKey: ["tags"],
+    enabled,
   });
 }
 
