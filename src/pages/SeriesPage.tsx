@@ -9,8 +9,10 @@ export default function SeriesPage() {
         <p className="text-sm text-slate-500">시리즈를 생성하고 이름을 수정합니다.</p>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <SeriesCreateForm />
+      <div className="space-y-4">
+        <div className="max-w-xs">
+          <SeriesCreateForm />
+        </div>
         <SeriesList />
       </div>
     </div>
