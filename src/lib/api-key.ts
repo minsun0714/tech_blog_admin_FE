@@ -5,7 +5,7 @@ import {
 } from "@/lib/constants";
 
 function canUseSessionStorage() {
-  return typeof window !== "undefined" && typeof window.sessionStorage !== "undefined";
+  return typeof window !== "undefined" && typeof sessionStorage !== "undefined";
 }
 
 export function getApiKeyFromSessionStorage() {
@@ -13,13 +13,13 @@ export function getApiKeyFromSessionStorage() {
     return "";
   }
 
-  const expiresAt = window.sessionStorage.getItem(API_KEY_EXPIRY_STORAGE_KEY);
+  const expiresAt = sessionStorage.getItem(API_KEY_EXPIRY_STORAGE_KEY);
   if (expiresAt && Date.now() > Number(expiresAt)) {
     removeApiKeyFromSessionStorage();
     return "";
   }
 
-  return window.sessionStorage.getItem(API_KEY_STORAGE_KEY) ?? "";
+  return sessionStorage.getItem(API_KEY_STORAGE_KEY) ?? "";
 }
 
 export function setApiKeyToSessionStorage(apiKey: string) {
@@ -34,8 +34,8 @@ export function setApiKeyToSessionStorage(apiKey: string) {
     return;
   }
 
-  window.sessionStorage.setItem(API_KEY_STORAGE_KEY, trimmedApiKey);
-  window.sessionStorage.setItem(
+  sessionStorage.setItem(API_KEY_STORAGE_KEY, trimmedApiKey);
+  sessionStorage.setItem(
     API_KEY_EXPIRY_STORAGE_KEY,
     String(Date.now() + API_KEY_TTL_MS),
   );
@@ -46,6 +46,6 @@ export function removeApiKeyFromSessionStorage() {
     return;
   }
 
-  window.sessionStorage.removeItem(API_KEY_STORAGE_KEY);
-  window.sessionStorage.removeItem(API_KEY_EXPIRY_STORAGE_KEY);
+  sessionStorage.removeItem(API_KEY_STORAGE_KEY);
+  sessionStorage.removeItem(API_KEY_EXPIRY_STORAGE_KEY);
 }
