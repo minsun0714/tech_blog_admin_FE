@@ -1,4 +1,3 @@
-import CategoryCreateForm from "@/components/category/CategoryCreateForm";
 import CategoryTree from "@/features/category/components/CategoryTree";
 
 export default function CategoriesPage() {

@@ -8,7 +8,9 @@ import {
 
 export default function ApiKeyInputBar() {
   const [apiKey, setApiKey] = useState(() => getApiKeyFromSessionStorage());
-  const [savedApiKey, setSavedApiKey] = useState(() => getApiKeyFromSessionStorage());
+  const [savedApiKey, setSavedApiKey] = useState(() =>
+    getApiKeyFromSessionStorage(),
+  );
   const trimmedApiKey = apiKey.trim();
   const isSaved = trimmedApiKey !== "" && trimmedApiKey === savedApiKey;
   const hasUnsavedChanges = trimmedApiKey !== savedApiKey;
@@ -32,8 +34,14 @@ export default function ApiKeyInputBar() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full max-w-xl items-end gap-2">
-      <label className="flex grow items-center gap-2 text-xs font-medium text-slate-600" htmlFor="api-key">
+    <form
+      onSubmit={handleSubmit}
+      className="flex w-full max-w-xl items-end gap-2"
+    >
+      <label
+        className="flex grow items-center gap-2 text-xs font-medium text-slate-600"
+        htmlFor="api-key"
+      >
         <span className="shrink-0">X-API-KEY</span>
         <input
           id="api-key"
@@ -49,7 +57,7 @@ export default function ApiKeyInputBar() {
       <Button
         type="submit"
         size="sm"
-        variant={isSaved ? "saved" : "default"}
+        variant={isSaved ? "default" : "outline"}
         disabled={!trimmedApiKey || !hasUnsavedChanges}
       >
         {isSaved ? "저장됨" : savedApiKey ? "수정" : "저장"}
