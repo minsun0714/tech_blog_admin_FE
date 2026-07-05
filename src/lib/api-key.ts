@@ -4,15 +4,7 @@ import {
   API_KEY_TTL_MS,
 } from "@/lib/constants";
 
-function canUseSessionStorage() {
-  return typeof window !== "undefined" && typeof sessionStorage !== "undefined";
-}
-
 export function getApiKeyFromSessionStorage() {
-  if (!canUseSessionStorage()) {
-    return "";
-  }
-
   const expiresAt = sessionStorage.getItem(API_KEY_EXPIRY_STORAGE_KEY);
   if (expiresAt && Date.now() > Number(expiresAt)) {
     removeApiKeyFromSessionStorage();
@@ -23,10 +15,6 @@ export function getApiKeyFromSessionStorage() {
 }
 
 export function setApiKeyToSessionStorage(apiKey: string) {
-  if (!canUseSessionStorage()) {
-    return;
-  }
-
   const trimmedApiKey = apiKey.trim();
 
   if (!trimmedApiKey) {
@@ -42,10 +30,6 @@ export function setApiKeyToSessionStorage(apiKey: string) {
 }
 
 export function removeApiKeyFromSessionStorage() {
-  if (!canUseSessionStorage()) {
-    return;
-  }
-
   sessionStorage.removeItem(API_KEY_STORAGE_KEY);
   sessionStorage.removeItem(API_KEY_EXPIRY_STORAGE_KEY);
 }
