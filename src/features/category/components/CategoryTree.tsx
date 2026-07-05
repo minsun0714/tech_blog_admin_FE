@@ -44,10 +44,10 @@ function CategoryTreeContent() {
       <CardContent>
         {isLoading ? <p className="text-sm text-slate-400">카테고리를 불러오는 중입니다.</p> : null}
         {isError ? <p className="text-sm text-rose-500">카테고리를 불러오지 못했습니다.</p> : null}
-        {!isLoading && !isError && (!data || data.length === 0) ? (
+        {!data?.length ? (
           <p className="text-sm text-slate-400">카테고리가 없습니다.</p>
         ) : null}
-        {!isLoading && !isError && data?.length ? (
+        {data?.length ? (
           <div className="space-y-3">
             {data.map((category) => (
               <CategoryNode key={category.categoryId} category={category} />
