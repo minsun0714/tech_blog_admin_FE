@@ -25,7 +25,7 @@ export default function PostEditPage() {
     if (postData) {
       setTitle(postData.title);
       setContent(postData.content);
-      setTagNames(postData.tags?.map((tag) => tag.name));
+      setTagNames(postData.tagNames);
       setCategoryId(postData.categoryId);
       setSeriesId(postData.seriesId ?? null);
     }

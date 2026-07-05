@@ -5,7 +5,7 @@ export type Post = {
   postId: number;
   title: string;
   content: string;
-  tags: { name: string }[];
+  tagNames: string[];
   categoryId: number;
   seriesId?: number | null;
 };

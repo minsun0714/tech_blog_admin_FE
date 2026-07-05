@@ -18,12 +18,12 @@ export default function PostFormActions({
   return (
     <div className="space-y-2">
       <div className="flex flex-wrap gap-2">
-        <Button onClick={() => void onDraft()} disabled={isDraftPending}>
+        <Button onClick={onDraft} disabled={isDraftPending}>
           {isDraftPending ? "저장 중..." : "임시저장"}
         </Button>
         <Button
           variant="outline"
-          onClick={() => void onPublish()}
+          onClick={onPublish}
           disabled={isPublishPending}
         >
           {isPublishPending ? "처리 중..." : "발행"}

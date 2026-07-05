@@ -46,6 +46,7 @@ export default function PostForm({
     setCategoryId,
     setSeriesId,
   } = useEditorStore();
+
   return (
     <Card>
       <CardHeader>
