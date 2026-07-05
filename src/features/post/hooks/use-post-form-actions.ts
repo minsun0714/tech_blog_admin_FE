@@ -15,8 +15,11 @@ interface UsePostFormActionsOptions {
 
 export function usePostFormActions({ postId }: UsePostFormActionsOptions = {}) {
   const navigate = useNavigate();
-  const { title, content, tagNames, categoryId, seriesId, setContent } = useEditorStore();
-  const [currentPostId, setCurrentPostId] = useState<number | null>(postId ?? null);
+  const { title, content, tagNames, categoryId, seriesId, setContent } =
+    useEditorStore();
+  const [currentPostId, setCurrentPostId] = useState<number | null>(
+    postId ?? null,
+  );
   const [message, setMessage] = useState<string | null>(null);
 
   const draftMutation = useDraftPostMutation();
@@ -42,6 +45,10 @@ export function usePostFormActions({ postId }: UsePostFormActionsOptions = {}) {
     }
     if (!payload.content.trim()) {
       setMessage("본문을 입력해주세요.");
+      return false;
+    }
+    if (!payload.categoryId) {
+      setMessage("카테고리를 선택해주세요.");
       return false;
     }
     return true;
@@ -74,7 +81,11 @@ export function usePostFormActions({ postId }: UsePostFormActionsOptions = {}) {
       } else {
         const result = await draftMutation.mutateAsync(payload);
         setCurrentPostId(result.postId ?? null);
-        setMessage(result.postId ? `임시저장했습니다. (ID ${result.postId})` : "임시저장했습니다.");
+        setMessage(
+          result.postId
+            ? `임시저장했습니다. (ID ${result.postId})`
+            : "임시저장했습니다.",
+        );
       }
     } catch {
       setMessage("임시저장에 실패했습니다.");
@@ -103,7 +114,10 @@ export function usePostFormActions({ postId }: UsePostFormActionsOptions = {}) {
       const ensuredPostId = await ensureDraftPost();
       if (!ensuredPostId) return;
 
-      const { imageUrl } = await uploadImageMutation.mutateAsync({ postId: ensuredPostId, file });
+      const { imageUrl } = await uploadImageMutation.mutateAsync({
+        postId: ensuredPostId,
+        file,
+      });
       const imageMarkdown = `![](${imageUrl})`;
       setContent(insertAtPosition(content, imageMarkdown, cursorPosition));
       setMessage("이미지를 업로드했습니다.");
