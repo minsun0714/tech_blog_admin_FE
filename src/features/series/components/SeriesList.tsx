@@ -51,7 +51,7 @@ export default function SeriesList() {
             {data.map((series) => (
               <div
                 key={series.id}
-                className="flex items-center justify-between rounded-xl border border-violet-100 bg-violet-50/40 px-4 py-3"
+                className="flex items-center justify-between rounded-xl border border-violet-100 bg-violet-50/40 px-4 py-3 cursor-pointer hover:bg-violet-50"
                 onClick={() =>
                   navigate(`/posts?type=series&value=${series.id}`)
                 }
