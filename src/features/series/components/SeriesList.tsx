@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import {
   Card,
@@ -16,6 +17,7 @@ import {
 import SeriesCreateForm from "@/components/series/SeriesCreateForm";
 
 export default function SeriesList() {
+  const navigate = useNavigate();
   const { data, isLoading, isError } = useSeriesQuery();
   const [editingId, setEditingId] = useState<number | null>(null);
   const updateMutation = useUpdateSeriesMutation();
@@ -44,15 +46,15 @@ export default function SeriesList() {
         {isError ? (
           <p className="text-sm text-rose-500">시리즈를 불러오지 못했습니다.</p>
         ) : null}
-        {!isLoading && !isError && (!data || data.length === 0) ? (
-          <p className="text-sm text-slate-400">시리즈가 없습니다.</p>
-        ) : null}
-        {!isLoading && !isError && data?.length ? (
+        {data?.length ? (
           <div className="space-y-3">
             {data.map((series) => (
               <div
                 key={series.id}
                 className="flex items-center justify-between rounded-xl border border-violet-100 bg-violet-50/40 px-4 py-3"
+                onClick={() =>
+                  navigate(`/posts?type=series&value=${series.id}`)
+                }
               >
                 <div>
                   <p className="font-semibold text-slate-900">{series.name}</p>
@@ -62,7 +64,10 @@ export default function SeriesList() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => setEditingId(series.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingId(series.id);
+                    }}
                   >
                     수정
                   </Button>
@@ -70,7 +75,10 @@ export default function SeriesList() {
                     size="sm"
                     variant="outline"
                     className="border-rose-200 text-rose-600 hover:bg-rose-50"
-                    onClick={() => void deleteMutation.mutateAsync(series.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      void deleteMutation.mutateAsync(series.id);
+                    }}
                   >
                     삭제
                   </Button>
@@ -78,7 +86,9 @@ export default function SeriesList() {
               </div>
             ))}
           </div>
-        ) : null}
+        ) : (
+          <p className="text-sm text-slate-400">시리즈가 없습니다.</p>
+        )}
         {currentSeries ? (
           <SeriesEditDialog
             open={editingId !== null}
