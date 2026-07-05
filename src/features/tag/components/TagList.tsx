@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -12,6 +13,7 @@ import {
   useDeleteTagMutation,
   useUpdateTagMutation,
 } from "@/features/tag/hooks/use-tags";
+import { Button } from "@/components/ui/Button";
 
 export type TagItem = {
   id: number;
@@ -19,6 +21,7 @@ export type TagItem = {
 };
 
 export default function TagList() {
+  const [isEditingMode, setIsEditingMode] = useState(false);
   const { data: tags } = useFetchTags({ enabled: true });
   const updateMutation = useUpdateTagMutation();
   const deleteMutation = useDeleteTagMutation();
@@ -33,17 +36,24 @@ export default function TagList() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>태그 목록</CardTitle>
-        <CardDescription>
-          클릭하여 이름을 수정하거나 제거할 수 있습니다.
-        </CardDescription>
+      <CardHeader className="flex flex-row justify-between items-center gap-4">
+        <div>
+          <CardTitle>태그 목록</CardTitle>
+          <CardDescription>
+            클릭하여 이름을 수정하거나 제거할 수 있습니다.
+          </CardDescription>
+        </div>
+        <Button size="lg" onClick={() => setIsEditingMode((prev) => !prev)}>
+          {isEditingMode ? "취소" : "수정 모드"}
+        </Button>
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">
           {tags?.map((tag: TagItem) => (
             <TagChip
+              isEditing={isEditingMode}
               key={tag.id}
+              id={tag.id}
               name={tag.name}
               onEdit={(name) => handleUpdate(tag.id, name)}
               onRemove={() => handleDelete(tag.id)}
