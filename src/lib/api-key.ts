@@ -1,4 +1,8 @@
-const API_KEY_STORAGE_KEY = "apiKey";
+import {
+  API_KEY_EXPIRY_STORAGE_KEY,
+  API_KEY_STORAGE_KEY,
+  API_KEY_TTL_MS,
+} from "@/lib/constants";
 
 function canUseSessionStorage() {
   return typeof window !== "undefined" && typeof window.sessionStorage !== "undefined";
@@ -6,6 +10,12 @@ function canUseSessionStorage() {
 
 export function getApiKeyFromSessionStorage() {
   if (!canUseSessionStorage()) {
+    return "";
+  }
+
+  const expiresAt = window.sessionStorage.getItem(API_KEY_EXPIRY_STORAGE_KEY);
+  if (expiresAt && Date.now() > Number(expiresAt)) {
+    removeApiKeyFromSessionStorage();
     return "";
   }
 
@@ -20,11 +30,15 @@ export function setApiKeyToSessionStorage(apiKey: string) {
   const trimmedApiKey = apiKey.trim();
 
   if (!trimmedApiKey) {
-    window.sessionStorage.removeItem(API_KEY_STORAGE_KEY);
+    removeApiKeyFromSessionStorage();
     return;
   }
 
   window.sessionStorage.setItem(API_KEY_STORAGE_KEY, trimmedApiKey);
+  window.sessionStorage.setItem(
+    API_KEY_EXPIRY_STORAGE_KEY,
+    String(Date.now() + API_KEY_TTL_MS),
+  );
 }
 
 export function removeApiKeyFromSessionStorage() {
@@ -33,4 +47,5 @@ export function removeApiKeyFromSessionStorage() {
   }
 
   window.sessionStorage.removeItem(API_KEY_STORAGE_KEY);
+  window.sessionStorage.removeItem(API_KEY_EXPIRY_STORAGE_KEY);
 }
