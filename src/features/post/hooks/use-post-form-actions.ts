@@ -8,23 +8,39 @@ import {
 } from "@/features/post/hooks/use-posts";
 import { insertAtPosition } from "@/lib/utils";
 import { useEditorStore } from "@/stores/editor-store";
+import { PostPayload } from "../post-api";
 
-interface UsePostFormActionsOptions {
-  postId?: number;
+interface UsePostUpdateActionsOptions {
+  postId: number;
 }
 
-export function usePostFormActions({ postId }: UsePostFormActionsOptions = {}) {
+const validatePayload = (
+  payload: PostPayload,
+  setMessage: (message: string) => void,
+) => {
+  if (!payload.title) {
+    setMessage("제목을 입력해주세요.");
+    return false;
+  }
+  if (!payload.content.trim()) {
+    setMessage("본문을 입력해주세요.");
+    return false;
+  }
+  if (!payload.categoryId) {
+    setMessage("카테고리를 선택해주세요.");
+    return false;
+  }
+  return true;
+};
+
+export function usePostCreateActions() {
   const navigate = useNavigate();
   const { title, content, tagNames, categoryId, seriesId, setContent } =
     useEditorStore();
-  const [currentPostId, setCurrentPostId] = useState<number | null>(
-    postId ?? null,
-  );
   const [message, setMessage] = useState<string | null>(null);
 
   const draftMutation = useDraftPostMutation();
   const publishMutation = usePublishPostMutation();
-  const updateMutation = useUpdatePostMutation();
   const uploadImageMutation = useUploadPostImageMutation();
 
   const payload = useMemo(
@@ -38,31 +54,10 @@ export function usePostFormActions({ postId }: UsePostFormActionsOptions = {}) {
     [title, content, tagNames, categoryId, seriesId],
   );
 
-  const validatePayload = () => {
-    if (!payload.title) {
-      setMessage("제목을 입력해주세요.");
-      return false;
-    }
-    if (!payload.content.trim()) {
-      setMessage("본문을 입력해주세요.");
-      return false;
-    }
-    if (!payload.categoryId) {
-      setMessage("카테고리를 선택해주세요.");
-      return false;
-    }
-    return true;
-  };
-
   const ensureDraftPost = async () => {
-    if (currentPostId) {
-      return currentPostId;
-    }
-
     const result = await draftMutation.mutateAsync(payload);
 
     if (result.postId) {
-      setCurrentPostId(result.postId);
       setMessage("임시저장 후 이미지를 업로드했습니다.");
       return result.postId;
     }
@@ -72,37 +67,27 @@ export function usePostFormActions({ postId }: UsePostFormActionsOptions = {}) {
   };
 
   const handleDraft = async () => {
-    if (!validatePayload()) return;
+    if (!validatePayload(payload, setMessage)) return;
 
     try {
-      if (currentPostId) {
-        await updateMutation.mutateAsync({ id: currentPostId, payload });
-        setMessage("게시물을 임시저장 형태로 수정했습니다.");
-      } else {
-        const result = await draftMutation.mutateAsync(payload);
-        setCurrentPostId(result.postId ?? null);
-        setMessage(
-          result.postId
-            ? `임시저장했습니다. (ID ${result.postId})`
-            : "임시저장했습니다.",
-        );
-      }
+      const result = await draftMutation.mutateAsync(payload);
+      setMessage(
+        result.postId
+          ? `임시저장했습니다. (ID ${result.postId})`
+          : "임시저장했습니다.",
+      );
     } catch {
       setMessage("임시저장에 실패했습니다.");
     }
   };
 
   const handlePublish = async () => {
-    if (!validatePayload()) return;
+    if (!validatePayload(payload, setMessage)) return;
 
     try {
-      if (currentPostId) {
-        await updateMutation.mutateAsync({ id: currentPostId, payload });
-        setMessage("게시물을 수정했습니다.");
-      } else {
-        await publishMutation.mutateAsync(payload);
-        setMessage("게시물을 발행했습니다.");
-      }
+      await publishMutation.mutateAsync(payload);
+      setMessage("게시물을 발행했습니다.");
+
       navigate("/posts");
     } catch {
       setMessage("게시물 저장에 실패했습니다.");
@@ -127,13 +112,77 @@ export function usePostFormActions({ postId }: UsePostFormActionsOptions = {}) {
   };
 
   return {
-    currentPostId,
-    setCurrentPostId,
     message,
+    handleImageDrop,
+    isDraftPending: draftMutation.isPending,
+    isPublishPending: publishMutation.isPending,
     handleDraft,
     handlePublish,
+  };
+}
+
+export function usePostUpdateActions({ postId }: UsePostUpdateActionsOptions) {
+  const { title, content, tagNames, categoryId, seriesId, setContent } =
+    useEditorStore();
+  const [message, setMessage] = useState<string | null>(null);
+
+  const updateMutation = useUpdatePostMutation();
+  const draftMutation = useDraftPostMutation();
+  const uploadImageMutation = useUploadPostImageMutation();
+
+  const payload = useMemo(
+    () => ({
+      title: title.trim(),
+      content,
+      tagNames,
+      categoryId,
+      seriesId,
+    }),
+    [title, content, tagNames, categoryId, seriesId],
+  );
+
+  const handleImageDrop = async (file: File, cursorPosition: number) => {
+    try {
+      const { imageUrl } = await uploadImageMutation.mutateAsync({
+        postId,
+        file,
+      });
+      const imageMarkdown = `![](${imageUrl})`;
+      setContent(insertAtPosition(content, imageMarkdown, cursorPosition));
+      setMessage("이미지를 업로드했습니다.");
+    } catch {
+      setMessage("이미지 업로드에 실패했습니다.");
+    }
+  };
+
+  const handleDraft = async () => {
+    if (!validatePayload(payload, setMessage)) return;
+
+    try {
+      await draftMutation.mutateAsync(payload);
+      setMessage("게시물을 임시저장 형태로 수정했습니다.");
+    } catch {
+      setMessage("임시저장에 실패했습니다.");
+    }
+  };
+
+  const handlePublish = async () => {
+    if (!validatePayload(payload, setMessage)) return;
+
+    try {
+      await updateMutation.mutateAsync({ id: postId, payload });
+      setMessage("게시물을 수정했습니다.");
+    } catch {
+      setMessage("게시물 저장에 실패했습니다.");
+    }
+  };
+
+  return {
+    message,
     handleImageDrop,
-    isDraftPending: draftMutation.isPending || updateMutation.isPending,
-    isPublishPending: publishMutation.isPending || updateMutation.isPending,
+    isDraftPending: draftMutation.isPending,
+    isPublishPending: updateMutation.isPending,
+    handleDraft,
+    handlePublish,
   };
 }

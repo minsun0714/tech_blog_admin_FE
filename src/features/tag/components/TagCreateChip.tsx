@@ -1,11 +1,14 @@
 import { KeyboardEvent, useRef, useState } from "react";
 import { Plus } from "lucide-react";
-import { useCreateTagMutation, useTagStore } from "@/features/tag/hooks/use-tags";
+import {
+  useFetchTags,
+  useCreateTagMutation,
+} from "@/features/tag/hooks/use-tags";
 
 export default function TagCreateChip() {
   const [value, setValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const tags = useTagStore((state) => state.tags);
+  const tags = useFetchTags().data || [];
   const createMutation = useCreateTagMutation();
 
   const handleKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {
@@ -14,7 +17,6 @@ export default function TagCreateChip() {
 
     const trimmedName = value.trim();
     if (!trimmedName) return;
-    if (tags.some((tag) => tag.name.toLowerCase() === trimmedName.toLowerCase())) return;
 
     try {
       await createMutation.mutateAsync(trimmedName);

@@ -1,7 +1,14 @@
 import { http } from "@/lib/http";
 import { FilterType } from "@/lib/type";
 
-export type Post = { postId: number; title: string; [key: string]: unknown };
+export type Post = {
+  postId: number;
+  title: string;
+  content: string;
+  tagNames: string[];
+  categoryId: number;
+  seriesId?: number | null;
+};
 
 export type PostPayload = {
   title: string;
@@ -10,6 +17,9 @@ export type PostPayload = {
   categoryId: number | null;
   seriesId: number | null;
 };
+
+export const getPost = (postId: number) =>
+  http.get<Post>(`/api/posts/${postId}`).then((r) => r.data);
 
 export const getPostsByFilterCondition = (
   filterType: FilterType,
