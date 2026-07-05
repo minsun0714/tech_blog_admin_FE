@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import PostForm from "@/features/post/components/PostForm";
 import { usePostCreateActions } from "@/features/post/hooks/use-post-form-actions";
 import { useEditorStore } from "@/stores/editor-store";
@@ -14,6 +15,7 @@ export default function PostNewPage() {
     setTagNames,
     setCategoryId,
     setSeriesId,
+    reset,
   } = useEditorStore();
 
   const {
@@ -24,6 +26,12 @@ export default function PostNewPage() {
     handleDraft,
     handlePublish,
   } = usePostCreateActions();
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, [reset]);
 
   return (
     <PostForm
