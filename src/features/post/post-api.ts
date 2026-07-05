@@ -1,4 +1,5 @@
 import { http } from "@/lib/http";
+import { FilterType } from "@/lib/type";
 
 export type Post = { postId: number; title: string; [key: string]: unknown };
 
@@ -10,16 +11,23 @@ export type PostPayload = {
   seriesId: number | null;
 };
 
-export const getPostsByCategory = (categoryId: number) =>
-  http.get<{ postResponseList: Post[] }>(`/api/posts?categoryId=${categoryId}`).then((r) => r.data.postResponseList);
+export const getPostsByFilterCondition = (
+  filterType: FilterType,
+  filterValue: number | null = null,
+) =>
+  http
+    .get<{ content: Post[] }>("/api/posts", {
+      params: { [filterType + "Id"]: filterValue },
+    })
+    .then((r) => r.data.content);
 
-export const getPostsBySeries = (seriesId: number) =>
-  http.get<{ postResponseList: Post[] }>(`/api/posts?seriesId=${seriesId}`).then((r) => r.data.postResponseList);
+export const draftPost = (payload: PostPayload) =>
+  http.post("/api/posts/draft", payload);
 
-export const draftPost = (payload: PostPayload) => http.post("/api/posts/draft", payload);
+export const publishPost = (payload: PostPayload) =>
+  http.post("/api/posts/publish", payload);
 
-export const publishPost = (payload: PostPayload) => http.post("/api/posts/publish", payload);
-
-export const updatePost = (id: number, payload: PostPayload) => http.patch(`/api/posts/${id}`, payload);
+export const updatePost = (id: number, payload: PostPayload) =>
+  http.patch(`/api/posts/${id}`, payload);
 
 export const deletePost = (id: number) => http.delete(`/api/posts/${id}`);

@@ -1,8 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createSeries, deleteSeries, getSeries, updateSeries } from "@/features/series/series-api";
+import {
+  createSeries,
+  deleteSeries,
+  getSeries,
+  updateSeries,
+} from "@/features/series/series-api";
 
-export function useSeriesQuery() {
-  return useQuery({ queryKey: ["series"], queryFn: getSeries });
+export function useSeriesQuery({ enabled }: { enabled?: boolean } = {}) {
+  return useQuery({ queryKey: ["series"], queryFn: getSeries, enabled });
 }
 
 export function useCreateSeriesMutation() {
@@ -20,7 +25,8 @@ export function useUpdateSeriesMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, name }: { id: number; name: string }) => updateSeries(id, name),
+    mutationFn: ({ id, name }: { id: number; name: string }) =>
+      updateSeries(id, name),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["series"] });
     },
