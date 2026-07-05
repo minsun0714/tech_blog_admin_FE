@@ -14,21 +14,29 @@ export default function TagChip({ name, onEdit, onRemove }: TagChipProps) {
 
   return (
     <>
-      <button
-        type="button"
+      <Badge
         className="text-left"
         onClick={() => {
           if (onEdit) {
             setOpen(true);
           }
         }}
+        variant="secondary"
+        removable={Boolean(onRemove)}
+        onRemove={onRemove}
       >
-        <Badge variant="secondary" removable={Boolean(onRemove)} onRemove={onRemove} className="cursor-pointer">
-          <Pencil className="h-3 w-3" />
-          {name}
-        </Badge>
-      </button>
-      {onEdit ? <TagEditDialog open={open} onOpenChange={setOpen} name={name} onSave={onEdit} /> : null}
+        <Pencil className="h-3 w-3" />
+        {name}
+      </Badge>
+
+      {onEdit ? (
+        <TagEditDialog
+          open={open}
+          onOpenChange={setOpen}
+          name={name}
+          onSave={onEdit}
+        />
+      ) : null}
     </>
   );
 }
