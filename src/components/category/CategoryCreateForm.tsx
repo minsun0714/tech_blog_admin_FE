@@ -7,7 +7,6 @@ import CategoryTextField from "@/components/category/CategoryTextField";
 export default function CategoryCreateForm() {
   const [name, setName] = useState("");
   const [parentId, setParentId] = useState("");
-  const [feedback, setFeedback] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -15,12 +14,8 @@ export default function CategoryCreateForm() {
     onSuccess: () => {
       setName("");
       setParentId("");
-      setFeedback("카테고리를 생성했습니다.");
       // 모달을 닫는다.
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-    },
-    onError: () => {
-      setFeedback("카테고리 생성에 실패했습니다.");
     },
   });
 
@@ -31,16 +26,13 @@ export default function CategoryCreateForm() {
     const normalizedParentId = parentId.trim();
 
     if (!trimmedName) {
-      setFeedback("카테고리 이름을 입력해주세요.");
       return;
     }
 
     if (normalizedParentId && !/^\d+$/.test(normalizedParentId)) {
-      setFeedback("부모 ID는 숫자로 입력해주세요.");
       return;
     }
 
-    setFeedback(null);
     mutation.mutate({
       name: trimmedName,
       parentId: normalizedParentId
