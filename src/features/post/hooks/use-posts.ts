@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  getPost,
   deletePost,
   draftPost,
   getPostsByFilterCondition,
@@ -28,6 +29,13 @@ function extractLocationHeader(headers: unknown) {
 function parsePostIdFromLocation(location: string | null) {
   const matchedId = location?.match(/\/(\d+)$/)?.[1];
   return matchedId ? Number.parseInt(matchedId, 10) : null;
+}
+
+export function usePostQuery(postId: number) {
+  return useQuery({
+    queryKey: ["posts", postId],
+    queryFn: () => getPost(postId),
+  });
 }
 
 export function usePostsQuery(

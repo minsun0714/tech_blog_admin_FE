@@ -13,7 +13,10 @@ export default function PostTagInput({ value, onChange }: PostTagInputProps) {
   const appendTag = () => {
     const normalized = input.trim().replace(/,$/, "");
 
-    if (!normalized || value.some((tag) => tag.toLowerCase() === normalized.toLowerCase())) {
+    if (
+      !normalized ||
+      value.some((tag) => tag.toLowerCase() === normalized.toLowerCase())
+    ) {
       setInput("");
       return;
     }
@@ -42,8 +45,13 @@ export default function PostTagInput({ value, onChange }: PostTagInputProps) {
         placeholder="태그 입력 후 Enter 또는 쉼표"
       />
       <div className="flex flex-wrap gap-2">
-        {value.map((tag) => (
-          <Badge key={tag} variant="secondary" removable onRemove={() => onChange(value.filter((item) => item !== tag))}>
+        {value?.map((tag) => (
+          <Badge
+            key={tag}
+            variant="secondary"
+            removable
+            onRemove={() => onChange(value.filter((item) => item !== tag))}
+          >
             {tag}
           </Badge>
         ))}
