@@ -4,19 +4,7 @@ import { usePostCreateActions } from "@/features/post/hooks/use-post-form-action
 import { useEditorStore } from "@/stores/editor-store";
 
 export default function PostNewPage() {
-  const {
-    title,
-    content,
-    tagNames,
-    categoryId,
-    seriesId,
-    setTitle,
-    setContent,
-    setTagNames,
-    setCategoryId,
-    setSeriesId,
-    reset,
-  } = useEditorStore();
+  const { reset } = useEditorStore();
 
   const {
     message,
@@ -36,16 +24,6 @@ export default function PostNewPage() {
   return (
     <PostForm
       cardTitle="게시물 작성"
-      title={title}
-      content={content}
-      tagNames={tagNames}
-      categoryId={categoryId}
-      seriesId={seriesId}
-      setTitle={setTitle}
-      setContent={setContent}
-      setTagNames={setTagNames}
-      setCategoryId={setCategoryId}
-      setSeriesId={setSeriesId}
       message={message}
       onImageDrop={handleImageDrop}
       isDraftPending={isDraftPending}

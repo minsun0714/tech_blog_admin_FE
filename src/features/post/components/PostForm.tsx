@@ -13,19 +13,10 @@ import PostCategorySelect from "@/features/post/components/PostCategorySelect";
 import PostFormActions from "@/features/post/components/PostFormActions";
 import PostSeriesSelect from "@/features/post/components/PostSeriesSelect";
 import PostTagInput from "@/features/post/components/PostTagInput";
+import { useEditorStore } from "@/stores/editor-store";
 
 interface PostFormProps {
   cardTitle: string;
-  title: string;
-  content: string;
-  tagNames: string[];
-  categoryId: number | null;
-  seriesId: number | null;
-  setTitle: (title: string) => void;
-  setContent: (content: string) => void;
-  setTagNames: (tagNames: string[]) => void;
-  setCategoryId: (categoryId: number | null) => void;
-  setSeriesId: (seriesId: number | null) => void;
   message: string | null;
   onImageDrop: (file: File, cursorPosition: number) => void;
   isDraftPending: boolean;
@@ -36,16 +27,6 @@ interface PostFormProps {
 
 export default function PostForm({
   cardTitle,
-  title,
-  content,
-  tagNames,
-  categoryId,
-  seriesId,
-  setTitle,
-  setContent,
-  setTagNames,
-  setCategoryId,
-  setSeriesId,
   message,
   onImageDrop,
   isDraftPending,
@@ -53,6 +34,18 @@ export default function PostForm({
   handleDraft,
   handlePublish,
 }: PostFormProps) {
+  const {
+    title,
+    content,
+    tagNames,
+    categoryId,
+    seriesId,
+    setTitle,
+    setContent,
+    setTagNames,
+    setCategoryId,
+    setSeriesId,
+  } = useEditorStore();
   return (
     <Card>
       <CardHeader>

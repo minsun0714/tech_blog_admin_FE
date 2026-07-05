@@ -18,18 +18,8 @@ export default function PostEditPage() {
     isError: isPostError,
   } = usePostQuery(postId);
 
-  const {
-    title,
-    content,
-    tagNames,
-    categoryId,
-    seriesId,
-    setTitle,
-    setContent,
-    setTagNames,
-    setCategoryId,
-    setSeriesId,
-  } = useEditorStore();
+  const { setTitle, setContent, setTagNames, setCategoryId, setSeriesId } =
+    useEditorStore();
 
   useEffect(() => {
     if (postData) {
@@ -75,16 +65,6 @@ export default function PostEditPage() {
       </div>
       <PostForm
         cardTitle={"게시물 수정"}
-        title={title}
-        content={content}
-        tagNames={tagNames}
-        categoryId={categoryId}
-        seriesId={seriesId}
-        setTitle={setTitle}
-        setContent={setContent}
-        setTagNames={setTagNames}
-        setCategoryId={setCategoryId}
-        setSeriesId={setSeriesId}
         message={message}
         onImageDrop={handleImageDrop}
         isDraftPending={isDraftPending}
