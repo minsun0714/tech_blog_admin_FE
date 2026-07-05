@@ -1,14 +1,10 @@
 import { KeyboardEvent, useRef, useState } from "react";
 import { Plus } from "lucide-react";
-import {
-  useFetchTags,
-  useCreateTagMutation,
-} from "@/features/tag/hooks/use-tags";
+import { useCreateTagMutation } from "@/features/tag/hooks/use-tags";
 
 export default function TagCreateChip() {
   const [value, setValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const tags = useFetchTags().data || [];
   const createMutation = useCreateTagMutation();
 
   const handleKeyDown = async (event: KeyboardEvent<HTMLInputElement>) => {

@@ -2,6 +2,7 @@ import { createContext, useContext, useMemo, ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FilterType } from "@/lib/type";
 import { useCategoriesQuery } from "@/features/category/hooks/use-categories";
+import { useFetchTags } from "@/features/tag/hooks/use-tags";
 import { flattenCategories } from "@/features/category/category-api";
 import { useSeriesQuery } from "@/features/series/hooks/use-series";
 
@@ -16,12 +17,14 @@ export const FILTER_CONFIG: Record<
 > = {
   category: { label: "카테고리별", placeholder: "카테고리 선택" },
   series: { label: "시리즈별", placeholder: "시리즈 선택" },
+  tag: { label: "태그별", placeholder: "태그 선택" },
 };
 
 const FILTER_TRANSFORMS = {
   category: (data: unknown) =>
     flattenCategories((data as Parameters<typeof flattenCategories>[0]) ?? []),
   series: (data: unknown) => (data as FilterOption[] | undefined) ?? [],
+  tag: (data: unknown) => (data as FilterOption[] | undefined) ?? [],
 } satisfies Record<FilterType, (data: unknown) => FilterOption[]>;
 
 function useAllFilterQueries(activeFilterType: FilterType) {
@@ -29,7 +32,8 @@ function useAllFilterQueries(activeFilterType: FilterType) {
     enabled: activeFilterType === "category",
   });
   const series = useSeriesQuery({ enabled: activeFilterType === "series" });
-  return { category, series } as const;
+  const tag = useFetchTags({ enabled: activeFilterType === "tag" });
+  return { category, series, tag } as const;
 }
 
 interface FilterContextType {

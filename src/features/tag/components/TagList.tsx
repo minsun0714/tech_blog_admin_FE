@@ -19,7 +19,7 @@ export type TagItem = {
 };
 
 export default function TagList() {
-  const { data: tags } = useFetchTags();
+  const { data: tags } = useFetchTags({ enabled: true });
   const updateMutation = useUpdateTagMutation();
   const deleteMutation = useDeleteTagMutation();
 
