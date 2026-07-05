@@ -1,23 +1,21 @@
 import { FormEvent, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/Button";
 import { createSeries } from "@/components/series/series-api";
-import SeriesFormCard from "@/components/series/SeriesFormCard";
 import SeriesTextField from "@/components/series/SeriesTextField";
 
 export default function SeriesCreateForm() {
   const [name, setName] = useState("");
-  const [feedback, setFeedback] = useState<string | null>(null);
+
+  const queryClient = useQueryClient();
 
   const createMutation = useMutation({
     mutationFn: createSeries,
     onSuccess: () => {
       setName("");
-      setFeedback("시리즈를 생성했습니다.");
+      queryClient.invalidateQueries({ queryKey: ["series"] });
     },
-    onError: () => {
-      setFeedback("시리즈 생성에 실패했습니다.");
-    },
+    onError: () => {},
   });
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -25,32 +23,32 @@ export default function SeriesCreateForm() {
     const trimmedName = name.trim();
 
     if (!trimmedName) {
-      setFeedback("시리즈 이름을 입력해주세요.");
       return;
     }
 
-    setFeedback(null);
     createMutation.mutate(trimmedName);
   };
 
   return (
-    <SeriesFormCard
-      title="시리즈 생성"
-      description="새로운 시리즈를 추가합니다."
-      feedback={feedback}
+    <form
+      className="flex justify-end items-center space-y-3"
+      onSubmit={handleSubmit}
     >
-      <form className="space-y-3" onSubmit={handleSubmit}>
-        <SeriesTextField
-          label="시리즈 이름"
-          value={name}
-          onChange={setName}
-          placeholder="예: 스프링 입문"
-        />
+      <SeriesTextField
+        label="시리즈 추가"
+        value={name}
+        onChange={setName}
+        placeholder="예: 스프링 입문"
+      />
 
-        <Button type="submit" disabled={createMutation.isPending}>
-          {createMutation.isPending ? "생성 중..." : "시리즈 생성"}
-        </Button>
-      </form>
-    </SeriesFormCard>
+      <Button
+        className="p-5"
+        size="lg"
+        type="submit"
+        disabled={createMutation.isPending}
+      >
+        {createMutation.isPending ? "생성 중..." : "시리즈 생성"}
+      </Button>
+    </form>
   );
 }
