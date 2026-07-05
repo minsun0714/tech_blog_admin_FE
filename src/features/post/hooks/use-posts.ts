@@ -2,18 +2,27 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   deletePost,
   draftPost,
-  getPostsByCategory,
-  getPostsBySeries,
+  getPostsByFilterCondition,
   publishPost,
   type PostPayload,
   updatePost,
 } from "@/features/post/post-api";
+import { FilterType } from "@/lib/type";
 
 function extractLocationHeader(headers: unknown) {
   const rawHeaders = headers as
-    | { location?: string; Location?: string; get?: (name: string) => string | null | undefined }
+    | {
+        location?: string;
+        Location?: string;
+        get?: (name: string) => string | null | undefined;
+      }
     | undefined;
-  return rawHeaders?.location ?? rawHeaders?.Location ?? rawHeaders?.get?.("location") ?? null;
+  return (
+    rawHeaders?.location ??
+    rawHeaders?.Location ??
+    rawHeaders?.get?.("location") ??
+    null
+  );
 }
 
 function parsePostIdFromLocation(location: string | null) {
@@ -21,19 +30,13 @@ function parsePostIdFromLocation(location: string | null) {
   return matchedId ? Number.parseInt(matchedId, 10) : null;
 }
 
-export function usePostsByCategoryQuery(categoryId: number | null) {
+export function usePostsQuery(
+  filterType: FilterType,
+  filterValue: number | null = null,
+) {
   return useQuery({
-    queryKey: ["posts", "category", categoryId],
-    queryFn: () => getPostsByCategory(categoryId!),
-    enabled: categoryId !== null,
-  });
-}
-
-export function usePostsBySeriesQuery(seriesId: number | null) {
-  return useQuery({
-    queryKey: ["posts", "series", seriesId],
-    queryFn: () => getPostsBySeries(seriesId!),
-    enabled: seriesId !== null,
+    queryKey: ["posts", filterType, filterValue],
+    queryFn: () => getPostsByFilterCondition(filterType, filterValue),
   });
 }
 
@@ -68,7 +71,8 @@ export function useUpdatePostMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, payload }: { id: number; payload: PostPayload }) => updatePost(id, payload),
+    mutationFn: ({ id, payload }: { id: number; payload: PostPayload }) =>
+      updatePost(id, payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["posts"] });
     },

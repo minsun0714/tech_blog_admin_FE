@@ -1,8 +1,19 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import SeriesEditDialog from "@/features/series/components/SeriesEditDialog";
-import { useDeleteSeriesMutation, useSeriesQuery, useUpdateSeriesMutation } from "@/features/series/hooks/use-series";
+import {
+  useDeleteSeriesMutation,
+  useSeriesQuery,
+  useUpdateSeriesMutation,
+} from "@/features/series/hooks/use-series";
+import SeriesCreateForm from "@/components/series/SeriesCreateForm";
 
 export default function SeriesList() {
   const { data, isLoading, isError } = useSeriesQuery();
@@ -17,13 +28,22 @@ export default function SeriesList() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>시리즈 목록</CardTitle>
-        <CardDescription>시리즈 이름을 수정하거나 삭제합니다.</CardDescription>
+      <CardHeader className="flex flex-row justify-between items-center gap-4">
+        <div>
+          <CardTitle>시리즈 목록</CardTitle>
+          <CardDescription>
+            시리즈 이름을 수정하거나 삭제합니다.
+          </CardDescription>
+        </div>
+        <SeriesCreateForm />
       </CardHeader>
       <CardContent>
-        {isLoading ? <p className="text-sm text-slate-400">시리즈를 불러오는 중입니다.</p> : null}
-        {isError ? <p className="text-sm text-rose-500">시리즈를 불러오지 못했습니다.</p> : null}
+        {isLoading ? (
+          <p className="text-sm text-slate-400">시리즈를 불러오는 중입니다.</p>
+        ) : null}
+        {isError ? (
+          <p className="text-sm text-rose-500">시리즈를 불러오지 못했습니다.</p>
+        ) : null}
         {!isLoading && !isError && (!data || data.length === 0) ? (
           <p className="text-sm text-slate-400">시리즈가 없습니다.</p>
         ) : null}
@@ -39,7 +59,11 @@ export default function SeriesList() {
                   <p className="text-xs text-slate-500">ID {series.id}</p>
                 </div>
                 <div className="flex gap-2">
-                  <Button size="sm" variant="outline" onClick={() => setEditingId(series.id)}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setEditingId(series.id)}
+                  >
                     수정
                   </Button>
                   <Button

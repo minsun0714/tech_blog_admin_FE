@@ -49,11 +49,13 @@ function CategoryTreeContent() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>카테고리 트리</CardTitle>
-        <CardDescription>
-          카테고리를 드래그해 부모 카테고리를 변경합니다.
-        </CardDescription>
+      <CardHeader className="flex flex-row justify-between items-center gap-4">
+        <div>
+          <CardTitle>카테고리 트리</CardTitle>
+          <CardDescription>
+            카테고리를 드래그해 부모 카테고리를 변경합니다.
+          </CardDescription>
+        </div>
         <CategoryCreateForm />
       </CardHeader>
       <CardContent>

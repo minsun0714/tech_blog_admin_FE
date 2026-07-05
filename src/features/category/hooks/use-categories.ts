@@ -7,15 +7,25 @@ import {
   updateCategoryName,
 } from "@/features/category/category-api";
 
-export function useCategoriesQuery() {
-  return useQuery({ queryKey: ["categories"], queryFn: getCategories });
+export function useCategoriesQuery({ enabled }: { enabled?: boolean } = {}) {
+  return useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+    enabled,
+  });
 }
 
 export function useCreateCategoryMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ name, parentId }: { name: string; parentId: number | null }) => createCategory(name, parentId),
+    mutationFn: ({
+      name,
+      parentId,
+    }: {
+      name: string;
+      parentId: number | null;
+    }) => createCategory(name, parentId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
@@ -37,7 +47,8 @@ export function useUpdateCategoryNameMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, name }: { id: number; name: string }) => updateCategoryName(id, name),
+    mutationFn: ({ id, name }: { id: number; name: string }) =>
+      updateCategoryName(id, name),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
@@ -48,7 +59,8 @@ export function useChangeCategoryParentMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, parentId }: { id: number; parentId: number | null }) => changeCategoryParent(id, parentId),
+    mutationFn: ({ id, parentId }: { id: number; parentId: number | null }) =>
+      changeCategoryParent(id, parentId),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
