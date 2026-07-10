@@ -14,6 +14,7 @@ import PostFormActions from "@/features/post/components/PostFormActions";
 import PostSeriesSelect from "@/features/post/components/PostSeriesSelect";
 import PostTagInput from "@/features/post/components/PostTagInput";
 import { useEditorStore } from "@/stores/editor-store";
+import TiptapEditor from "./TiptapEditor";
 
 interface PostFormProps {
   cardTitle: string;
@@ -68,11 +69,12 @@ export default function PostForm({
           </div>
           <div className="space-y-2 lg:col-span-2">
             <Label>본문</Label>
-            <MarkdownEditor
+            {/* <MarkdownEditor
               value={content}
               onChange={setContent}
               onImageDrop={onImageDrop}
-            />
+            /> */}
+            <TiptapEditor />
           </div>
           <div className="space-y-2 lg:col-span-2">
             <Label>태그</Label>
