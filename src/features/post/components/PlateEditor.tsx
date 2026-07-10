@@ -7,10 +7,12 @@ export function PlateEditor() {
     plugins: EditorKit,
   });
   return (
-    <Plate editor={editor}>
-      <EditorContainer>
-        <Editor placeholder="Type your message here." />
-      </EditorContainer>
-    </Plate>
+    <div className="w-full rounded-md border border-border bg-background h-[calc(100vh-700px)]">
+      <Plate editor={editor}>
+          <EditorContainer>
+            <Editor placeholder="Type your message here." />
+          </EditorContainer>
+      </Plate>
+    </div>
   );
 }
