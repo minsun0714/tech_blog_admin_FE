@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import MarkdownEditor from "@/features/post/components/MarkdownEditor";
+import { TooltipProvider } from "@/components/plate-ui/tooltip";
+import { PlateEditor } from "@/features/post/components/PlateEditor";
 import PostCategorySelect from "@/features/post/components/PostCategorySelect";
 import PostFormActions from "@/features/post/components/PostFormActions";
 import PostSeriesSelect from "@/features/post/components/PostSeriesSelect";
@@ -68,11 +70,14 @@ export default function PostForm({
           </div>
           <div className="space-y-2 lg:col-span-2">
             <Label>본문</Label>
-            <MarkdownEditor
+            {/* <MarkdownEditor
               value={content}
               onChange={setContent}
               onImageDrop={onImageDrop}
-            />
+            /> */}
+            <TooltipProvider>
+              <PlateEditor />
+            </TooltipProvider>
           </div>
           <div className="space-y-2 lg:col-span-2">
             <Label>태그</Label>
