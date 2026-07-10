@@ -1,3 +1,5 @@
+import "@/styles/_variables.scss";
+
 import { EditorContent, EditorContext } from "@tiptap/react";
 import { FloatingMenu, BubbleMenu } from "@tiptap/react/menus";
 import { useEditor } from "@tiptap/react";
@@ -12,10 +14,16 @@ import Italic from "@tiptap/extension-italic";
 import Strike from "@tiptap/extension-strike";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
+import Image from "@tiptap/extension-image";
+import { Dropcursor } from "@tiptap/extensions";
+import { ImageUploadNode } from "@/components/tiptap-node/image-upload-node";
 import { useMemo } from "react";
 import ToolBarButtons from "./ToolBarButtons";
+import { useUploadPostImageMutation } from "../hooks/use-post-image";
 
 const TiptapEditor = () => {
+  const { mutateAsync: handleImageUpload } = useUploadPostImageMutation();
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -27,6 +35,23 @@ const TiptapEditor = () => {
       Strike,
       Underline,
       Code,
+      Image.configure({
+        resize: {
+          enabled: true,
+          alwaysPreserveAspectRatio: true,
+        },
+      }),
+      Dropcursor,
+      ImageUploadNode.configure({
+        accept: "image/*",
+        maxSize: 5 * 1024 * 1024, // 5MB
+        limit: 10,
+        upload: async (file) => {
+          const { imageUrl } = await handleImageUpload(file);
+          return imageUrl;
+        },
+        onError: (error) => console.error("Upload failed:", error),
+      }),
       Highlight.configure({ multicolor: true }),
       Link.configure({
         openOnClick: true,

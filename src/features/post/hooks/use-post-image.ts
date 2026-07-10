@@ -3,8 +3,8 @@ import { uploadPostImage } from "@/features/post/post-image-api";
 
 export function useUploadPostImageMutation() {
   return useMutation({
-    mutationFn: async ({ postId, file }: { postId: number; file: File }) => {
-      const response = await uploadPostImage(postId, file);
+    mutationFn: async (file: File) => {
+      const response = await uploadPostImage(file);
       return { imageUrl: response.data.imageUrl };
     },
   });

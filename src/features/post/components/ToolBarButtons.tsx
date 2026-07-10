@@ -2,6 +2,7 @@ import * as Icon from "lucide-react";
 import { ToolbarButton } from "@/features/post/components/ToolBarButton";
 import { Editor } from "@tiptap/core";
 import { useEditorState } from "@tiptap/react";
+import { ImageUploadButton } from "@/components/tiptap-ui/image-upload-button";
 
 interface ToolBarButtonsProps {
   editor: Editor;
@@ -91,6 +92,14 @@ export default function ToolBarButtons({ editor }: ToolBarButtonsProps) {
       >
         <Icon.Unlink size={18} />
       </ToolbarButton>
+
+      <ImageUploadButton
+        editor={editor}
+        text="Add Image"
+        hideWhenUnavailable={true}
+        showShortcut={true}
+        onInserted={() => console.log("Image inserted!")}
+      />
     </div>
   );
 }
