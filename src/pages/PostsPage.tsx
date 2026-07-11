@@ -16,11 +16,7 @@ export default function PostsPage() {
           </p>
         </div>
 
-        <Button
-          variant="outline"
-          size="lg"
-          onClick={() => navigate("/posts/new")}
-        >
+        <Button size="lg" onClick={() => navigate("/posts/new")}>
           새 게시글 작성
         </Button>
       </div>
