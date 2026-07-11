@@ -33,7 +33,6 @@ export default function PostEditPage() {
 
   const {
     message,
-    handleImageDrop,
     isDraftPending,
     isPublishPending,
     handleDraft,
@@ -66,7 +65,6 @@ export default function PostEditPage() {
       <PostForm
         cardTitle={"게시물 수정"}
         message={message}
-        onImageDrop={handleImageDrop}
         isDraftPending={isDraftPending}
         isPublishPending={isPublishPending}
         handleDraft={handleDraft}
