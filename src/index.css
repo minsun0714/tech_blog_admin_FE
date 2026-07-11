@@ -1,5 +1,5 @@
-@import './styles/_variables.scss';
-@import './styles/_keyframe-animations.scss';
+@import "./styles/_variables.scss";
+@import "./styles/_keyframe-animations.scss";
 
 @import "tailwindcss";
 
@@ -132,7 +132,26 @@ body {
   * {
     @apply border-border outline-ring;
   }
-  body {
+  html {
     @apply bg-background text-foreground;
+    font-size: 16px;
+  }
+
+  @media (min-width: 768px) {
+    html {
+      font-size: 17px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    html {
+      font-size: 18px;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    html {
+      font-size: 19px;
+    }
   }
 }
