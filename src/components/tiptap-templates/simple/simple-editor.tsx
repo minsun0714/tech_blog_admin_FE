@@ -13,6 +13,7 @@ import { Highlight } from "@tiptap/extension-highlight";
 import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
 import { Selection } from "@tiptap/extensions";
+import { Dropcursor } from "@tiptap/extensions";
 
 // --- UI Primitives ---
 import { Button } from "@/components/tiptap-ui-primitive/button";
@@ -68,12 +69,13 @@ import { useCursorVisibility } from "@/hooks/use-cursor-visibility";
 import { ThemeToggle } from "@/components/tiptap-templates/simple/theme-toggle";
 
 // --- Lib ---
-import { cn, handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
+import { MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 
 // --- Styles ---
 import "@/components/tiptap-templates/simple/simple-editor.scss";
 
 import content from "@/components/tiptap-templates/simple/data/content.json";
+import { useUploadPostImageMutation } from "@/features/post/hooks/use-post-image";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -191,6 +193,8 @@ export function SimpleEditor() {
   );
   const toolbarRef = useRef<HTMLDivElement>(null);
 
+  const { mutateAsync: handleImageUpload } = useUploadPostImageMutation();
+
   const editor = useEditor({
     immediatelyRender: false,
     editorProps: {
@@ -215,7 +219,13 @@ export function SimpleEditor() {
       TaskList,
       TaskItem.configure({ nested: true }),
       Highlight.configure({ multicolor: true }),
-      Image,
+      Image.configure({
+        resize: {
+          enabled: true,
+          alwaysPreserveAspectRatio: true,
+        },
+      }),
+      Dropcursor,
       Typography,
       Superscript,
       Subscript,
@@ -223,8 +233,11 @@ export function SimpleEditor() {
       ImageUploadNode.configure({
         accept: "image/*",
         maxSize: MAX_FILE_SIZE,
-        limit: 3,
-        upload: handleImageUpload,
+        limit: 10,
+        upload: async (file) => {
+          const { imageUrl } = await handleImageUpload(file);
+          return imageUrl;
+        },
         onError: (error) => console.error("Upload failed:", error),
       }),
     ],
