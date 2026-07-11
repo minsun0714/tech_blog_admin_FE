@@ -63,6 +63,7 @@ export default function PostEditPage() {
         </Button>
       </div>
       <PostForm
+        content={postData?.content || ""}
         cardTitle={"게시물 수정"}
         message={message}
         isDraftPending={isDraftPending}

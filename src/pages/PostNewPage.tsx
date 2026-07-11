@@ -24,6 +24,7 @@ export default function PostNewPage() {
 
   return (
     <PostForm
+      content={content}
       cardTitle="새 게시글 작성"
       message={message}
       isDraftPending={isDraftPending}

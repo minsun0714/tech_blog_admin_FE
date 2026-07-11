@@ -16,6 +16,7 @@ import PostTagInput from "@/features/post/components/PostTagInput";
 import { useEditorStore } from "@/stores/editor-store";
 
 interface PostFormProps {
+  content: string;
   cardTitle: string;
   message: string | null;
   isDraftPending: boolean;
@@ -25,6 +26,7 @@ interface PostFormProps {
 }
 
 export default function PostForm({
+  content,
   cardTitle,
   message,
   isDraftPending,
@@ -65,7 +67,7 @@ export default function PostForm({
           </div>
           <div className="space-y-2 lg:col-span-2">
             <Label>본문</Label>
-            <SimpleEditor />
+            <SimpleEditor content={content} />
           </div>
           <div className="space-y-2 lg:col-span-2">
             <Label>태그</Label>

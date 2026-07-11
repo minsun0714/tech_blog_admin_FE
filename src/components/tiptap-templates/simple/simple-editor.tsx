@@ -186,7 +186,7 @@ const MobileToolbarContent = ({
   </>
 );
 
-export function SimpleEditor() {
+export function SimpleEditor({ content }: { content: string }) {
   const isMobile = useIsBreakpoint();
   const { height } = useWindowSize();
   const [mobileView, setMobileView] = useState<"main" | "highlighter" | "link">(
@@ -196,8 +196,7 @@ export function SimpleEditor() {
 
   const postUuidRef = useRef<string | null>(null);
   const { mutateAsync: handleImageUpload } = useUploadPostImageMutation();
-
-  const { content, setContent } = useEditorStore();
+  const { setContent } = useEditorStore();
 
   const editor = useEditor({
     immediatelyRender: false,
