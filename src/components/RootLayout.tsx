@@ -1,5 +1,8 @@
 import { NavLink, Outlet } from "react-router-dom";
 import MainHeader from "@/components/layout/MainHeader";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { X } from "lucide-react";
 
 const NAV_ITEMS = [
   { to: "/", label: "대시보드", end: true },
@@ -10,13 +13,30 @@ const NAV_ITEMS = [
 ];
 
 export default function RootLayout() {
+  const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
+  console.log("isHamburgerOpen", isHamburgerOpen);
   return (
-    <div className="flex min-h-screen bg-gradient-to-b from-violet-50 to-white">
-      <aside className="w-56 shrink-0 border-r border-violet-100 bg-white px-4 py-8 shadow-sm">
-        <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-violet-400">
-          Tech Blog
-        </p>
-        <p className="mb-8 text-lg font-bold text-slate-900">Admin</p>
+    <div className="flex min-h-screen bg-linear-to-b from-violet-50 to-white">
+      <aside
+        className={cn(
+          "max-w-120 shrink-0 border-r border-violet-100 bg-white px-4 py-8 shadow-sm",
+          isHamburgerOpen
+            ? "w-1/2 min-w-80 absolute z-80 h-full"
+            : "w-0 overflow-hidden px-0",
+          "md:block",
+        )}
+      >
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-violet-400">
+              Tech Blog
+            </p>
+            <p className="mb-8 text-lg font-bold text-slate-900">Admin</p>
+          </div>
+          <button onClick={() => setIsHamburgerOpen(false)}>
+            <X color="black" size={20} />
+          </button>
+        </div>
         <nav className="space-y-1">
           {NAV_ITEMS.map(({ to, label, end }) => (
             <NavLink
@@ -39,7 +59,10 @@ export default function RootLayout() {
       </aside>
 
       <main className="flex-1 p-8">
-        <MainHeader />
+        <MainHeader
+          isHamburgerOpen={isHamburgerOpen}
+          setIsHamburgerOpen={setIsHamburgerOpen}
+        />
         <Outlet />
       </main>
     </div>
