@@ -4,32 +4,33 @@ import { usePostCreateActions } from "@/features/post/hooks/use-post-form-action
 import { useEditorStore } from "@/stores/editor-store";
 
 export default function PostNewPage() {
-  const { reset } = useEditorStore();
+  const { content, reset } = useEditorStore();
 
   const {
     message,
-    handleImageDrop,
     isDraftPending,
     isPublishPending,
     handleDraft,
     handlePublish,
+    handleGetUuid,
   } = usePostCreateActions();
 
   useEffect(() => {
     return () => {
       reset();
     };
-  }, [reset]);
+  }, []);
 
   return (
     <PostForm
-      cardTitle="게시물 작성"
+      content={content}
+      cardTitle="새 게시글 작성"
       message={message}
-      onImageDrop={handleImageDrop}
       isDraftPending={isDraftPending}
       isPublishPending={isPublishPending}
       handleDraft={handleDraft}
       handlePublish={handlePublish}
+      handleGetUuid={handleGetUuid}
     />
   );
 }

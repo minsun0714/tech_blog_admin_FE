@@ -18,8 +18,15 @@ export default function PostEditPage() {
     isError: isPostError,
   } = usePostQuery(postId);
 
-  const { setTitle, setContent, setTagNames, setCategoryId, setSeriesId } =
-    useEditorStore();
+  const {
+    setTitle,
+    setContent,
+    setTagNames,
+    setCategoryId,
+    setSeriesId,
+    setPostUuid,
+    reset,
+  } = useEditorStore();
 
   useEffect(() => {
     if (postData) {
@@ -28,17 +35,24 @@ export default function PostEditPage() {
       setTagNames(postData.tagNames);
       setCategoryId(postData.categoryId);
       setSeriesId(postData.seriesId ?? null);
+      setPostUuid(postData.postUuid);
     }
   }, [postData]);
 
   const {
     message,
-    handleImageDrop,
     isDraftPending,
     isPublishPending,
     handleDraft,
     handlePublish,
+    handleGetUuid,
   } = usePostUpdateActions({ postId });
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, []);
 
   if (isPostLoading) {
     return <div>Loading...</div>;
@@ -64,13 +78,14 @@ export default function PostEditPage() {
         </Button>
       </div>
       <PostForm
+        content={postData?.content || ""}
         cardTitle={"게시물 수정"}
         message={message}
-        onImageDrop={handleImageDrop}
         isDraftPending={isDraftPending}
         isPublishPending={isPublishPending}
         handleDraft={handleDraft}
         handlePublish={handlePublish}
+        handleGetUuid={handleGetUuid}
       />
     </div>
   );
