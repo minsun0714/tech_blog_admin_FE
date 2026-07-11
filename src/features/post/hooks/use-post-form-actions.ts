@@ -35,8 +35,7 @@ const validatePayload = (
 
 export function usePostCreateActions() {
   const navigate = useNavigate();
-  const { title, content, tagNames, categoryId, seriesId } =
-    useEditorStore();
+  const { title, content, tagNames, categoryId, seriesId } = useEditorStore();
   const [message, setMessage] = useState<string | null>(null);
 
   const draftMutation = useDraftPostMutation();
@@ -91,6 +90,7 @@ export function usePostCreateActions() {
 }
 
 export function usePostUpdateActions({ postId }: UsePostUpdateActionsOptions) {
+  const navigate = useNavigate();
   const { title, content, tagNames, categoryId, seriesId } = useEditorStore();
   const [message, setMessage] = useState<string | null>(null);
 
@@ -124,7 +124,9 @@ export function usePostUpdateActions({ postId }: UsePostUpdateActionsOptions) {
 
     try {
       await updateMutation.mutateAsync({ id: postId, payload });
-      setMessage("게시물을 수정했습니다.");
+      setMessage("게시물을 발행했습니다.");
+
+      navigate("/posts");
     } catch {
       setMessage("게시물 저장에 실패했습니다.");
     }
