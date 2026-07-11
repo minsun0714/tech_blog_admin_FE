@@ -74,7 +74,6 @@ import { MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 // --- Styles ---
 import "@/components/tiptap-templates/simple/simple-editor.scss";
 
-import content from "@/components/tiptap-templates/simple/data/content.json";
 import { useUploadPostImageMutation } from "@/features/post/hooks/use-post-image";
 
 const MainToolbarContent = ({
@@ -241,7 +240,7 @@ export function SimpleEditor() {
         onError: (error) => console.error("Upload failed:", error),
       }),
     ],
-    content,
+    content: "<p>Hello World!</p>",
   });
 
   const rect = useCursorVisibility({
