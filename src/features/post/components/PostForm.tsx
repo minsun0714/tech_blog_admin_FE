@@ -80,6 +80,7 @@ export default function PostForm({
         <Separator />
 
         <PostFormActions
+          cardTitle={cardTitle}
           onDraft={() => handleDraft()}
           onPublish={() => handlePublish()}
           isDraftPending={isDraftPending}

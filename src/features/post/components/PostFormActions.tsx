@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/Button";
 
 interface PostFormActionsProps {
+  cardTitle: string;
   onDraft: () => void;
   onPublish: () => void;
   isDraftPending: boolean;
@@ -9,6 +10,7 @@ interface PostFormActionsProps {
 }
 
 export default function PostFormActions({
+  cardTitle,
   onDraft,
   onPublish,
   isDraftPending,
@@ -22,11 +24,11 @@ export default function PostFormActions({
           {isDraftPending ? "저장 중..." : "임시저장"}
         </Button>
         <Button
-          variant="outline"
+          variant="secondary"
           onClick={onPublish}
           disabled={isPublishPending}
         >
-          {isPublishPending ? "처리 중..." : "발행"}
+          {isPublishPending ? "처리 중..." : cardTitle}
         </Button>
       </div>
       {message ? <p className="text-sm text-slate-500">{message}</p> : null}
