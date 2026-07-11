@@ -18,8 +18,14 @@ export default function PostEditPage() {
     isError: isPostError,
   } = usePostQuery(postId);
 
-  const { setTitle, setContent, setTagNames, setCategoryId, setSeriesId } =
-    useEditorStore();
+  const {
+    setTitle,
+    setContent,
+    setTagNames,
+    setCategoryId,
+    setSeriesId,
+    reset,
+  } = useEditorStore();
 
   useEffect(() => {
     if (postData) {
@@ -38,6 +44,12 @@ export default function PostEditPage() {
     handleDraft,
     handlePublish,
   } = usePostUpdateActions({ postId });
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, []);
 
   if (isPostLoading) {
     return <div>Loading...</div>;

@@ -4,9 +4,7 @@ import { usePostCreateActions } from "@/features/post/hooks/use-post-form-action
 import { useEditorStore } from "@/stores/editor-store";
 
 export default function PostNewPage() {
-  const { reset, content } = useEditorStore();
-
-  console.log("PostNewPage content:", content); // Log the content for debugging
+  const { content, reset } = useEditorStore();
 
   const {
     message,
