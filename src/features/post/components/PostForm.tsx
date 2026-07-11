@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
@@ -14,6 +13,7 @@ import PostFormActions from "@/features/post/components/PostFormActions";
 import PostSeriesSelect from "@/features/post/components/PostSeriesSelect";
 import PostTagInput from "@/features/post/components/PostTagInput";
 import { useEditorStore } from "@/stores/editor-store";
+import { Textarea } from "@/components/ui/textarea";
 
 interface PostFormProps {
   content: string;
@@ -36,7 +36,6 @@ export default function PostForm({
   handlePublish,
   handleGetUuid,
 }: PostFormProps) {
-
   const {
     title,
     tagNames,
@@ -47,7 +46,7 @@ export default function PostForm({
     setCategoryId,
     setSeriesId,
   } = useEditorStore();
-  
+
   return (
     <Card>
       <CardHeader>
@@ -57,21 +56,22 @@ export default function PostForm({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid gap-4 lg:grid-cols-2">
-          <div className="space-y-2 lg:col-span-2">
+        <div>
+          <div className="space-y-2 max-w-full">
             <Label htmlFor="post-title">제목</Label>
-            <Input
+            <Textarea
               id="post-title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="게시물 제목"
+              className="w-full resize-none"
             />
           </div>
-          <div className="space-y-2 lg:col-span-2">
+          <div className="space-y-2">
             <Label>본문</Label>
             <SimpleEditor content={content} handleGetUuid={handleGetUuid} />
           </div>
-          <div className="space-y-2 lg:col-span-2">
+          <div className="space-y-2">
             <Label>태그</Label>
             <PostTagInput value={tagNames} onChange={setTagNames} />
           </div>

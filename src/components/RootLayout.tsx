@@ -59,7 +59,7 @@ export default function RootLayout() {
         </nav>
       </aside>
 
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-8 max-w-full">
         <MainHeader
           isHamburgerOpen={isHamburgerOpen}
           setIsHamburgerOpen={setIsHamburgerOpen}
