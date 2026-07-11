@@ -176,6 +176,11 @@ export function isValidPosition(pos: number | null | undefined): pos is number {
  * @param extensionNames - A single extension name or an array of names to check
  * @returns True if at least one of the extensions is available, false otherwise
  */
+// This check runs from render/selection paths, so an absent extension would
+// otherwise repeat the hint on every update — remember what was already
+// reported and say it once.
+const warnedMissingExtensions = new Set<string>()
+
 export function isExtensionAvailable(
   editor: Editor | null,
   extensionNames: string | string[]
@@ -194,9 +199,14 @@ export function isExtensionAvailable(
   )
 
   if (!found) {
-    console.warn(
-      `None of the extensions [${names.join(", ")}] were found in the editor schema. Ensure they are included in the editor configuration.`
-    )
+    const key = names.join(", ")
+
+    if (!warnedMissingExtensions.has(key)) {
+      warnedMissingExtensions.add(key)
+      console.warn(
+        `None of the extensions [${key}] were found in the editor schema. Ensure they are included in the editor configuration.`
+      )
+    }
   }
 
   return found

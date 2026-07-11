@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import MarkdownEditor from "@/features/post/components/MarkdownEditor";
+import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import PostCategorySelect from "@/features/post/components/PostCategorySelect";
 import PostFormActions from "@/features/post/components/PostFormActions";
 import PostSeriesSelect from "@/features/post/components/PostSeriesSelect";
@@ -74,7 +75,8 @@ export default function PostForm({
               onChange={setContent}
               onImageDrop={onImageDrop}
             /> */}
-            <TiptapEditor />
+            {/* <TiptapEditor /> */}
+            <SimpleEditor />
           </div>
           <div className="space-y-2 lg:col-span-2">
             <Label>태그</Label>
