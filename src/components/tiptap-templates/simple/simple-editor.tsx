@@ -75,7 +75,6 @@ import { MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 import "@/components/tiptap-templates/simple/simple-editor.scss";
 
 import { useUploadPostImageMutation } from "@/features/post/hooks/use-post-image";
-import { getPostImageUploadUuid } from "@/features/post/post-image-api";
 import { useEditorStore } from "@/stores/editor-store";
 
 const MainToolbarContent = ({
