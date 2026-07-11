@@ -37,23 +37,24 @@ export default function RootLayout() {
             <X color="black" size={20} />
           </button>
         </div>
-        <nav className="space-y-1">
+        <nav className="flex flex-col items-start gap-2">
           {NAV_ITEMS.map(({ to, label, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              className={({ isActive }) =>
-                [
-                  "block rounded-xl px-4 py-2.5 text-sm font-medium transition",
-                  isActive
-                    ? "bg-violet-100 text-violet-800"
-                    : "text-slate-600 hover:bg-violet-50 hover:text-violet-700",
-                ].join(" ")
-              }
-            >
-              {label}
-            </NavLink>
+            <button onClick={() => setIsHamburgerOpen(false)} className="w-full " key={to}>
+              <NavLink
+                to={to}
+                end={end}
+                className={({ isActive }) =>
+                  [
+                    "block rounded-xl px-4 py-2.5 text-sm font-medium transition",
+                    isActive
+                      ? "bg-violet-100 text-violet-800"
+                      : "text-slate-600 hover:bg-violet-50 hover:text-violet-700",
+                  ].join(" ")
+                }
+              >
+                {label}
+              </NavLink>
+            </button>
           ))}
         </nav>
       </aside>
