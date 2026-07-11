@@ -1,12 +1,10 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUploadPostImageMutation } from "@/features/post/hooks/use-post-image";
 import {
   useDraftPostMutation,
   usePublishPostMutation,
   useUpdatePostMutation,
 } from "@/features/post/hooks/use-posts";
-import { insertAtPosition } from "@/lib/utils";
 import { useEditorStore } from "@/stores/editor-store";
 import { PostPayload } from "../post-api";
 
