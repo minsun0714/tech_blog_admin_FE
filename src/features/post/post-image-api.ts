@@ -1,7 +1,10 @@
 import { http } from "@/lib/http";
 
-export const getPostImageUploadUuid = () =>
+export const createPostImageUploadUuid = () =>
   http.get<{ postUuid: string }>(`/api/images/uuid`);
+
+export const getPostImageUploadUuid = (postId: number) =>
+  http.get<{ postUuid: string }>(`/api/images/uuid/${postId}`);
 
 export const uploadPostImage = (file: File, postUuid: string) => {
   const formData = new FormData();

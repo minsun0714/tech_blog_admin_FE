@@ -24,6 +24,7 @@ export default function PostEditPage() {
     setTagNames,
     setCategoryId,
     setSeriesId,
+    setPostUuid,
     reset,
   } = useEditorStore();
 
@@ -34,6 +35,7 @@ export default function PostEditPage() {
       setTagNames(postData.tagNames);
       setCategoryId(postData.categoryId);
       setSeriesId(postData.seriesId ?? null);
+      setPostUuid(postData.postUuid);
     }
   }, [postData]);
 
@@ -43,6 +45,7 @@ export default function PostEditPage() {
     isPublishPending,
     handleDraft,
     handlePublish,
+    handleGetUuid,
   } = usePostUpdateActions({ postId });
 
   useEffect(() => {
@@ -82,6 +85,7 @@ export default function PostEditPage() {
         isPublishPending={isPublishPending}
         handleDraft={handleDraft}
         handlePublish={handlePublish}
+        handleGetUuid={handleGetUuid}
       />
     </div>
   );

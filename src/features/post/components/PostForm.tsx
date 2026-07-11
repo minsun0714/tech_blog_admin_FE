@@ -23,6 +23,7 @@ interface PostFormProps {
   isPublishPending: boolean;
   handleDraft: () => void;
   handlePublish: () => void;
+  handleGetUuid: () => Promise<string | null>;
 }
 
 export default function PostForm({
@@ -33,6 +34,7 @@ export default function PostForm({
   isPublishPending,
   handleDraft,
   handlePublish,
+  handleGetUuid,
 }: PostFormProps) {
 
   const {
@@ -67,7 +69,7 @@ export default function PostForm({
           </div>
           <div className="space-y-2 lg:col-span-2">
             <Label>본문</Label>
-            <SimpleEditor content={content} />
+            <SimpleEditor content={content} handleGetUuid={handleGetUuid} />
           </div>
           <div className="space-y-2 lg:col-span-2">
             <Label>태그</Label>

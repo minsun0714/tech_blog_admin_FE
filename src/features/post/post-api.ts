@@ -10,6 +10,10 @@ export type Post = {
   seriesId?: number | null;
 };
 
+export type PostWithUuid = Post & {
+  postUuid: string;
+};
+
 export type PostPayload = {
   title: string;
   content: string;
@@ -19,7 +23,7 @@ export type PostPayload = {
 };
 
 export const getPost = (postId: number) =>
-  http.get<Post>(`/api/posts/${postId}`).then((r) => r.data);
+  http.get<PostWithUuid>(`/api/posts/${postId}`).then((r) => r.data);
 
 export const getPostsByFilterCondition = (
   filterType: FilterType,

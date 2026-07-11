@@ -12,6 +12,7 @@ export default function PostNewPage() {
     isPublishPending,
     handleDraft,
     handlePublish,
+    handleGetUuid,
   } = usePostCreateActions();
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function PostNewPage() {
       isPublishPending={isPublishPending}
       handleDraft={handleDraft}
       handlePublish={handlePublish}
+      handleGetUuid={handleGetUuid}
     />
   );
 }

@@ -7,6 +7,10 @@ import {
 } from "@/features/post/hooks/use-posts";
 import { useEditorStore } from "@/stores/editor-store";
 import { PostPayload } from "../post-api";
+import {
+  createPostImageUploadUuid,
+  getPostImageUploadUuid,
+} from "@/features/post/post-image-api";
 
 interface UsePostUpdateActionsOptions {
   postId: number;
@@ -33,7 +37,8 @@ const validatePayload = (
 
 export function usePostCreateActions() {
   const navigate = useNavigate();
-  const { title, content, tagNames, categoryId, seriesId } = useEditorStore();
+  const { title, content, tagNames, categoryId, seriesId, postUuid } =
+    useEditorStore();
   const [message, setMessage] = useState<string | null>(null);
 
   const draftMutation = useDraftPostMutation();
@@ -46,8 +51,9 @@ export function usePostCreateActions() {
       tagNames,
       categoryId,
       seriesId,
+      postUuid,
     }),
-    [title, content, tagNames, categoryId, seriesId],
+    [title, content, tagNames, categoryId, seriesId, postUuid],
   );
 
   const handleDraft = async () => {
@@ -78,18 +84,35 @@ export function usePostCreateActions() {
     }
   };
 
+  const handleGetUuid = async () => {
+    try {
+      const { data } = await createPostImageUploadUuid();
+      if (data.postUuid) {
+        return data.postUuid;
+      } else {
+        setMessage("UUID를 가져오는데 실패했습니다.");
+        return null;
+      }
+    } catch {
+      setMessage("UUID를 가져오는데 실패했습니다.");
+      return null;
+    }
+  };
+
   return {
     message,
     isDraftPending: draftMutation.isPending,
     isPublishPending: publishMutation.isPending,
     handleDraft,
     handlePublish,
+    handleGetUuid,
   };
 }
 
 export function usePostUpdateActions({ postId }: UsePostUpdateActionsOptions) {
   const navigate = useNavigate();
-  const { title, content, tagNames, categoryId, seriesId } = useEditorStore();
+  const { title, content, tagNames, categoryId, seriesId, postUuid } =
+    useEditorStore();
   const [message, setMessage] = useState<string | null>(null);
 
   const updateMutation = useUpdatePostMutation();
@@ -102,8 +125,9 @@ export function usePostUpdateActions({ postId }: UsePostUpdateActionsOptions) {
       tagNames,
       categoryId,
       seriesId,
+      postUuid,
     }),
-    [title, content, tagNames, categoryId, seriesId],
+    [title, content, tagNames, categoryId, seriesId, postUuid],
   );
 
   const handleDraft = async () => {
@@ -130,11 +154,27 @@ export function usePostUpdateActions({ postId }: UsePostUpdateActionsOptions) {
     }
   };
 
+  const handleGetUuid = async () => {
+    try {
+      const { data } = await getPostImageUploadUuid(postId);
+      if (data.postUuid) {
+        return data.postUuid;
+      } else {
+        setMessage("UUID를 가져오는데 실패했습니다.");
+        return null;
+      }
+    } catch {
+      setMessage("UUID를 가져오는데 실패했습니다.");
+      return null;
+    }
+  };
+
   return {
     message,
     isDraftPending: draftMutation.isPending,
     isPublishPending: updateMutation.isPending,
     handleDraft,
     handlePublish,
+    handleGetUuid,
   };
 }

@@ -186,17 +186,25 @@ const MobileToolbarContent = ({
   </>
 );
 
-export function SimpleEditor({ content }: { content: string }) {
+export function SimpleEditor({
+  content,
+  handleGetUuid,
+}: {
+  content: string;
+  handleGetUuid: () => Promise<string | null>;
+}) {
   const isMobile = useIsBreakpoint();
   const { height } = useWindowSize();
   const [mobileView, setMobileView] = useState<"main" | "highlighter" | "link">(
     "main",
   );
   const toolbarRef = useRef<HTMLDivElement>(null);
+  const { postUuid, setPostUuid, setContent } = useEditorStore();
 
-  const postUuidRef = useRef<string | null>(null);
+  const postUuidPromiseRef = useRef<Promise<string | null> | null>(null);
+  const postUuidRef = useRef<string | null>(postUuid);
   const { mutateAsync: handleImageUpload } = useUploadPostImageMutation();
-  const { setContent } = useEditorStore();
+  
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -238,17 +246,22 @@ export function SimpleEditor({ content }: { content: string }) {
         maxSize: MAX_FILE_SIZE,
         limit: 10,
         upload: async (file) => {
-          if (!postUuidRef.current) {
-            const { data } = await getPostImageUploadUuid();
-            postUuidRef.current = data?.postUuid;
+          if (!postUuidPromiseRef.current) {
+            postUuidPromiseRef.current = handleGetUuid();
           }
+          const newPostUuid = await postUuidPromiseRef.current;
+          setPostUuid(newPostUuid);
+          postUuidRef.current = newPostUuid;
+
           if (!postUuidRef.current) {
-            throw new Error("Failed to get post UUID for image upload.");
+            throw new Error("Failed to get post UUID.");
           }
+
           const { imageUrl } = await handleImageUpload({
             file,
             postUuid: postUuidRef.current,
           });
+
           return imageUrl;
         },
         onError: (error) => console.error("Upload failed:", error),
