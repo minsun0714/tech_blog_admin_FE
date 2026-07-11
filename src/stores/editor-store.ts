@@ -6,11 +6,13 @@ type EditorState = {
   tagNames: string[];
   categoryId: number | null;
   seriesId: number | null;
+  postUuid: string | null;
   setTitle: (title: string) => void;
   setContent: (content: string) => void;
   setTagNames: (tags: string[]) => void;
   setCategoryId: (id: number | null) => void;
   setSeriesId: (id: number | null) => void;
+  setPostUuid: (uuid: string | null) => void;
   reset: () => void;
 };
 
@@ -20,6 +22,7 @@ const initialState = {
   tagNames: [],
   categoryId: null,
   seriesId: null,
+  postUuid: null,
 };
 
 export const useEditorStore = create<EditorState>((set) => ({
@@ -29,5 +32,6 @@ export const useEditorStore = create<EditorState>((set) => ({
   setTagNames: (tagNames) => set({ tagNames }),
   setCategoryId: (categoryId) => set({ categoryId }),
   setSeriesId: (seriesId) => set({ seriesId }),
+  setPostUuid: (postUuid) => set({ postUuid }),
   reset: () => set(initialState),
 }));

@@ -1,8 +1,12 @@
 import { http } from "@/lib/http";
 
-export const uploadPostImage = (file: File) => {
+export const getPostImageUploadUuid = () =>
+  http.get<{ postUuid: string }>(`/api/images/uuid`);
+
+export const uploadPostImage = (file: File, postUuid: string) => {
   const formData = new FormData();
   formData.append("image", file);
+  formData.append("postUuid", postUuid);
   return http.post<{ imageUrl: string }>(`/api/images`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });

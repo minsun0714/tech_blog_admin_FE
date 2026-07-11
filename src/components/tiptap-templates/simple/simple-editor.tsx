@@ -75,6 +75,8 @@ import { MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 import "@/components/tiptap-templates/simple/simple-editor.scss";
 
 import { useUploadPostImageMutation } from "@/features/post/hooks/use-post-image";
+import { getPostImageUploadUuid } from "@/features/post/post-image-api";
+import { useEditorStore } from "@/stores/editor-store";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -192,7 +194,10 @@ export function SimpleEditor() {
   );
   const toolbarRef = useRef<HTMLDivElement>(null);
 
+  const postUuidRef = useRef<string | null>(null);
   const { mutateAsync: handleImageUpload } = useUploadPostImageMutation();
+
+  const { content, setContent } = useEditorStore();
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -234,13 +239,26 @@ export function SimpleEditor() {
         maxSize: MAX_FILE_SIZE,
         limit: 10,
         upload: async (file) => {
-          const { imageUrl } = await handleImageUpload(file);
+          if (!postUuidRef.current) {
+            const { data } = await getPostImageUploadUuid();
+            postUuidRef.current = data?.postUuid;
+          }
+          if (!postUuidRef.current) {
+            throw new Error("Failed to get post UUID for image upload.");
+          }
+          const { imageUrl } = await handleImageUpload({
+            file,
+            postUuid: postUuidRef.current,
+          });
           return imageUrl;
         },
         onError: (error) => console.error("Upload failed:", error),
       }),
     ],
-    content: "<p>Hello World!</p>",
+    content,
+    onUpdate: ({ editor }) => {
+      setContent(editor.getHTML());
+    },
   });
 
   const rect = useCursorVisibility({
