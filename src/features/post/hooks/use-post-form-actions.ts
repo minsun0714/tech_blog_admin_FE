@@ -35,13 +35,12 @@ const validatePayload = (
 
 export function usePostCreateActions() {
   const navigate = useNavigate();
-  const { title, content, tagNames, categoryId, seriesId, setContent } =
+  const { title, content, tagNames, categoryId, seriesId } =
     useEditorStore();
   const [message, setMessage] = useState<string | null>(null);
 
   const draftMutation = useDraftPostMutation();
   const publishMutation = usePublishPostMutation();
-  const uploadImageMutation = useUploadPostImageMutation();
 
   const payload = useMemo(
     () => ({
@@ -53,18 +52,6 @@ export function usePostCreateActions() {
     }),
     [title, content, tagNames, categoryId, seriesId],
   );
-
-  const ensureDraftPost = async () => {
-    const result = await draftMutation.mutateAsync(payload);
-
-    if (result.postId) {
-      setMessage("임시저장 후 이미지를 업로드했습니다.");
-      return result.postId;
-    }
-
-    setMessage("임시저장 후 이미지를 추가할 수 있습니다.");
-    return null;
-  };
 
   const handleDraft = async () => {
     if (!validatePayload(payload, setMessage)) return;
@@ -94,26 +81,8 @@ export function usePostCreateActions() {
     }
   };
 
-  const handleImageDrop = async (file: File, cursorPosition: number) => {
-    try {
-      const ensuredPostId = await ensureDraftPost();
-      if (!ensuredPostId) return;
-
-      const { imageUrl } = await uploadImageMutation.mutateAsync({
-        postId: ensuredPostId,
-        file,
-      });
-      const imageMarkdown = `![](${imageUrl})`;
-      setContent(insertAtPosition(content, imageMarkdown, cursorPosition));
-      setMessage("이미지를 업로드했습니다.");
-    } catch {
-      setMessage("이미지 업로드에 실패했습니다.");
-    }
-  };
-
   return {
     message,
-    handleImageDrop,
     isDraftPending: draftMutation.isPending,
     isPublishPending: publishMutation.isPending,
     handleDraft,
@@ -122,13 +91,11 @@ export function usePostCreateActions() {
 }
 
 export function usePostUpdateActions({ postId }: UsePostUpdateActionsOptions) {
-  const { title, content, tagNames, categoryId, seriesId, setContent } =
-    useEditorStore();
+  const { title, content, tagNames, categoryId, seriesId } = useEditorStore();
   const [message, setMessage] = useState<string | null>(null);
 
   const updateMutation = useUpdatePostMutation();
   const draftMutation = useDraftPostMutation();
-  const uploadImageMutation = useUploadPostImageMutation();
 
   const payload = useMemo(
     () => ({
@@ -140,20 +107,6 @@ export function usePostUpdateActions({ postId }: UsePostUpdateActionsOptions) {
     }),
     [title, content, tagNames, categoryId, seriesId],
   );
-
-  const handleImageDrop = async (file: File, cursorPosition: number) => {
-    try {
-      const { imageUrl } = await uploadImageMutation.mutateAsync({
-        postId,
-        file,
-      });
-      const imageMarkdown = `![](${imageUrl})`;
-      setContent(insertAtPosition(content, imageMarkdown, cursorPosition));
-      setMessage("이미지를 업로드했습니다.");
-    } catch {
-      setMessage("이미지 업로드에 실패했습니다.");
-    }
-  };
 
   const handleDraft = async () => {
     if (!validatePayload(payload, setMessage)) return;
@@ -179,7 +132,6 @@ export function usePostUpdateActions({ postId }: UsePostUpdateActionsOptions) {
 
   return {
     message,
-    handleImageDrop,
     isDraftPending: draftMutation.isPending,
     isPublishPending: updateMutation.isPending,
     handleDraft,
