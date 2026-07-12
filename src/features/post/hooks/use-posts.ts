@@ -9,6 +9,7 @@ import {
   updatePost,
 } from "@/features/post/post-api";
 import { FilterType } from "@/lib/type";
+import { useSearchParams } from "react-router-dom";
 
 function extractLocationHeader(headers: unknown) {
   const rawHeaders = headers as
@@ -38,13 +39,24 @@ export function usePostQuery(postId: number) {
   });
 }
 
+export enum PublishStatus {
+  PUBLISHED = "PUBLISHED",
+  DRAFTED = "DRAFTED",
+}
+
 export function usePostsQuery(
   filterType: FilterType,
   filterValue: number | null = null,
 ) {
+  const [searchParams] = useSearchParams();
+  const publishStatus: PublishStatus | null = searchParams.get(
+    "publishStatus",
+  ) as PublishStatus | null;
+
   return useQuery({
-    queryKey: ["posts", filterType, filterValue],
-    queryFn: () => getPostsByFilterCondition(filterType, filterValue),
+    queryKey: ["posts", filterType, filterValue, publishStatus],
+    queryFn: () =>
+      getPostsByFilterCondition(filterType, filterValue, publishStatus),
   });
 }
 

@@ -28,10 +28,11 @@ export const getPost = (postId: number) =>
 export const getPostsByFilterCondition = (
   filterType: FilterType,
   filterValue: number | null = null,
+  publishStatus: "PUBLISHED" | "DRAFTED" | null = null,
 ) =>
   http
     .get<{ content: Post[] }>("/api/posts", {
-      params: { [filterType + "Id"]: filterValue },
+      params: { [filterType + "Id"]: filterValue, publishStatus },
     })
     .then((r) => r.data.content);
 
