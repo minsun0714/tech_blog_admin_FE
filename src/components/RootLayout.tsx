@@ -37,9 +37,20 @@ export default function RootLayout() {
             <X color="black" size={20} />
           </button>
         </div>
+        <div className="flex flex-col items-center justify-center pb-12">
+          <img
+            src="/jasmine.svg"
+            alt="jasmine"
+            className="w-1/2 rounded-2xl "
+          />
+        </div>
         <nav className="flex flex-col items-start gap-2">
           {NAV_ITEMS.map(({ to, label, end }) => (
-            <button onClick={() => setIsHamburgerOpen(false)} className="w-full " key={to}>
+            <button
+              onClick={() => setIsHamburgerOpen(false)}
+              className="w-full "
+              key={to}
+            >
               <NavLink
                 to={to}
                 end={end}
