@@ -3,6 +3,17 @@ import { FormEvent, useState } from "react";
 import { GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import type { CategoryNode as CategoryNodeType } from "@/features/category/category-api";
 import {
   useDeleteCategoryMutation,
@@ -134,16 +145,39 @@ export default function CategoryNode({
             >
               {isEditing ? "취소" : "수정"}
             </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-rose-200 text-rose-600 hover:bg-rose-50"
-              onClick={() =>
-                void deleteMutation.mutateAsync(category.categoryId)
-              }
-            >
-              삭제
-            </Button>
+
+            <AlertDialog>
+              <AlertDialogTrigger
+                render={
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-rose-200 text-rose-600 hover:bg-rose-50"
+                  >
+                    삭제
+                  </Button>
+                }
+              />
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>정말 삭제하시겠습니까?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    이 작업은 되돌릴 수 없습니다. 이 작업을 수행하면 해당
+                    카테고리와 모든 하위 카테고리가 영구적으로 삭제됩니다.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>취소</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() =>
+                      void deleteMutation.mutateAsync(category.categoryId)
+                    }
+                  >
+                    계속
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       </div>
