@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Toaster } from "sonner";
 import RootLayout from "@/components/RootLayout";
 import CategoriesPage from "@/pages/CategoriesPage";
 import DashboardPage from "@/pages/DashboardPage";
@@ -26,5 +27,10 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <Toaster richColors position="top-center" />
+      <RouterProvider router={router} />
+    </>
+  );
 }

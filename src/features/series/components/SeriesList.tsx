@@ -8,6 +8,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import SeriesEditDialog from "@/features/series/components/SeriesEditDialog";
 import {
   useDeleteSeriesMutation,
@@ -71,17 +82,42 @@ export default function SeriesList() {
                   >
                     수정
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-rose-200 text-rose-600 hover:bg-rose-50"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      void deleteMutation.mutateAsync(series.id);
-                    }}
-                  >
-                    삭제
-                  </Button>
+
+                  <AlertDialog>
+                    <AlertDialogTrigger
+                      render={
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-rose-200 text-rose-600 hover:bg-rose-50"
+                        >
+                          삭제
+                        </Button>
+                      }
+                    />
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          정말 삭제하시겠습니까?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          이 작업은 되돌릴 수 없습니다. (하위 게시물은 삭제되지
+                          않습니다.)
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>취소</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            void deleteMutation.mutateAsync(series.id);
+                          }}
+                        >
+                          계속
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </div>
             ))}
