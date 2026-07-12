@@ -8,7 +8,6 @@ import {
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
-import PostCategorySelect from "@/features/post/components/PostCategorySelect";
 import PostFormActions from "@/features/post/components/PostFormActions";
 import PostSeriesSelect from "@/features/post/components/PostSeriesSelect";
 import PostTagInput from "@/features/post/components/PostTagInput";
@@ -16,6 +15,7 @@ import { useEditorStore } from "@/stores/editor-store";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { PublishStatus } from "../hooks/use-posts";
+import { CategorySelect } from "./CategorySelect";
 
 interface PostFormProps {
   content: string;
@@ -89,7 +89,10 @@ export default function PostForm({
             <Label>태그</Label>
             <PostTagInput value={tagNames} onChange={setTagNames} />
           </div>
-          <PostCategorySelect value={categoryId} onChange={setCategoryId} />
+          <CategorySelect
+            categoryId={categoryId}
+            setCategoryId={setCategoryId}
+          />
           <PostSeriesSelect value={seriesId} onChange={setSeriesId} />
         </div>
 
