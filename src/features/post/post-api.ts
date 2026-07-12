@@ -22,6 +22,14 @@ export type PostPayload = {
   seriesId: number | null;
 };
 
+export const getPostCount = () =>
+  http
+    .get<{
+      publishedPostCount: number;
+      draftedPostCount: number;
+    }>("/api/posts/count")
+    .then((r) => r.data);
+
 export const getPost = (postId: number) =>
   http.get<PostWithUuid>(`/api/posts/${postId}`).then((r) => r.data);
 

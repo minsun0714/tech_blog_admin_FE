@@ -1,23 +1,25 @@
+import { usePostCountQuery } from "@/features/post/hooks/use-posts";
 import { Link } from "react-router-dom";
 
-const SUMMARY_CARDS = [
-  {
-    title: "저장된 게시글",
-    description: "저장된 게시글 목록을 확인하고 새 게시물을 작성합니다.",
-    to: "/posts",
-    count: 0,
-    unit: "편",
-  },
-  {
-    title: "임시저장된 게시글",
-    description: "임시저장된 게시글 목록을 확인하고 이어서 작성합니다.",
-    to: "/posts/drafts",
-    count: 0,
-    unit: "편",
-  },
-];
-
 export default function PostsDashBoardCards() {
+  const { data: postCount } = usePostCountQuery();
+
+  const SUMMARY_CARDS = [
+    {
+      title: "저장된 게시글",
+      description: "저장된 게시글 목록을 확인하고 새 게시물을 작성합니다.",
+      to: "/posts",
+      count: postCount?.publishedPostCount,
+      unit: "편",
+    },
+    {
+      title: "임시저장된 게시글",
+      description: "임시저장된 게시글 목록을 확인하고 이어서 작성합니다.",
+      to: "/posts/drafts",
+      count: postCount?.draftedPostCount,
+      unit: "편",
+    },
+  ];
   return (
     <div className="flex w-full gap-6 flex-wrap">
       {SUMMARY_CARDS.map(({ title, description, to, count, unit }) => (

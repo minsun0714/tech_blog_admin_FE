@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getPost,
+  getPostCount,
   deletePost,
   draftPost,
   getPostsByFilterCondition,
@@ -30,6 +31,13 @@ function extractLocationHeader(headers: unknown) {
 function parsePostIdFromLocation(location: string | null) {
   const matchedId = location?.match(/\/(\d+)$/)?.[1];
   return matchedId ? Number.parseInt(matchedId, 10) : null;
+}
+
+export function usePostCountQuery() {
+  return useQuery({
+    queryKey: ["posts", "count"],
+    queryFn: () => getPostCount(),
+  });
 }
 
 export function usePostQuery(postId: number) {
@@ -71,7 +79,8 @@ export function useDraftPostMutation() {
       return { response, postId };
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts", "count"] });
     },
   });
 }
@@ -82,7 +91,8 @@ export function usePublishPostMutation() {
   return useMutation({
     mutationFn: publishPost,
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts", "count"] });
     },
   });
 }
@@ -94,7 +104,8 @@ export function useUpdatePostMutation() {
     mutationFn: ({ id, payload }: { id: number; payload: PostPayload }) =>
       updatePost(id, payload),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts", "count"] });
     },
   });
 }
@@ -105,7 +116,8 @@ export function useDeletePostMutation() {
   return useMutation({
     mutationFn: deletePost,
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts", "count"] });
     },
   });
 }
