@@ -1,6 +1,15 @@
 import { http } from "@/lib/http";
 import { FilterType } from "@/lib/type";
 
+export type Paged<T> = {
+  content: T[];
+  number: number;
+  totalPages: number;
+  totalElements: number;
+  first: boolean;
+  last: boolean;
+};
+
 export type Post = {
   postId: number;
   title: string;
@@ -29,12 +38,13 @@ export const getPostsByFilterCondition = (
   filterType: FilterType,
   filterValue: number | null = null,
   publishStatus: "PUBLISHED" | "DRAFTED" | null = null,
+  page: number = 0,
 ) =>
   http
-    .get<{ content: Post[] }>("/api/posts", {
-      params: { [filterType + "Id"]: filterValue, publishStatus },
+    .get<Paged<Post>>("/api/posts", {
+      params: { [filterType + "Id"]: filterValue, publishStatus, page },
     })
-    .then((r) => r.data.content);
+    .then((r) => r.data);
 
 export const draftPost = (payload: PostPayload) =>
   http.post("/api/posts/draft", payload);

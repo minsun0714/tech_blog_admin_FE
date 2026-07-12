@@ -49,14 +49,18 @@ export function usePostsQuery(
   filterValue: number | null = null,
 ) {
   const [searchParams] = useSearchParams();
+
   const publishStatus: PublishStatus | null = searchParams.get(
     "publishStatus",
   ) as PublishStatus | null;
 
+  const pageParam = searchParams.get("page");
+  const page = pageParam ? parseInt(pageParam) - 1 : 0;
+
   return useQuery({
-    queryKey: ["posts", filterType, filterValue, publishStatus],
+    queryKey: ["posts", filterType, filterValue, publishStatus, page],
     queryFn: () =>
-      getPostsByFilterCondition(filterType, filterValue, publishStatus),
+      getPostsByFilterCondition(filterType, filterValue, publishStatus, page),
   });
 }
 
