@@ -72,7 +72,7 @@ export default function PostForm({
       <CardContent className="space-y-6">
         <div>
           <div className="space-y-2 max-w-full">
-            <Label htmlFor="post-title">제목</Label>
+            <Label htmlFor="post-title">제목 *</Label>
             <Textarea
               id="post-title"
               value={title}
@@ -82,7 +82,7 @@ export default function PostForm({
             />
           </div>
           <div className="space-y-2">
-            <Label>본문</Label>
+            <Label>본문 *</Label>
             <SimpleEditor content={content} handleGetUuid={handleGetUuid} />
           </div>
           <div className="space-y-2">

@@ -29,7 +29,7 @@ export default function PostCategorySelect({
 
   return (
     <div className="space-y-2">
-      <Label>카테고리</Label>
+      <Label>카테고리 *</Label>
       <Select
         value={value === null ? NONE_VALUE : String(value)}
         onValueChange={(v) =>
