@@ -172,14 +172,14 @@ export function CategorySelectNode({
 
             <Button
               size="sm"
-              variant="outline"
+              variant="default"
               onClick={() => setIsEditing((prev) => !prev)}
             >
               {isEditing ? "취소" : "수정"}
             </Button>
             <Button
               size="sm"
-              variant="outline"
+              variant="destructive"
               className="border-rose-200 text-rose-600 hover:bg-rose-50"
               onClick={() =>
                 void deleteMutation.mutateAsync(category.categoryId)
