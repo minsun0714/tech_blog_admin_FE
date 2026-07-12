@@ -1,4 +1,4 @@
-import MonitoringGraph from "@/features/monitoring/components/MonitoringGraph";
+import MonitoringGraph from "@/features/monitoring/components/HealthMetricsSummary";
 import PostsDashBoardCards from "@/features/monitoring/components/PostsDashBoardCards";
 
 export default function DashboardPage() {
@@ -12,7 +12,13 @@ export default function DashboardPage() {
           블로그 관리 현황을 한눈에 확인합니다.
         </p>
       </div>
+      <h2 className="text-lg font-semibold tracking-tight text-slate-900">
+        블로그 현황
+      </h2>
       <PostsDashBoardCards />
+      <h2 className="text-lg font-semibold tracking-tight text-slate-900">
+        모니터링 현황
+      </h2>
       <MonitoringGraph />
     </div>
   );
