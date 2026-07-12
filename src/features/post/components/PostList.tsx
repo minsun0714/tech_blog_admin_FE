@@ -21,10 +21,11 @@ import {
   usePostFilter,
 } from "@/features/post/context/PostFilterContext";
 import { Switch } from "@/components/ui/switch";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import PostPagination from "@/features/post/components/PostPagination";
 
 function PostListContent() {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const {
     activeFilterType,
@@ -126,6 +127,7 @@ function PostListContent() {
             <PostCard
               key={post.postId}
               post={post}
+              onUpdate={() => navigate(`/posts/${post.postId}/edit`)}
               onDelete={() => deletePost(post.postId)}
             />
           ))}
