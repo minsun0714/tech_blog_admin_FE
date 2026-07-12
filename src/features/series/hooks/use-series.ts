@@ -1,4 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+
 import {
   createSeries,
   deleteSeries,
@@ -7,7 +9,11 @@ import {
 } from "@/features/series/series-api";
 
 export function useSeriesQuery({ enabled }: { enabled?: boolean } = {}) {
-  return useQuery({ queryKey: ["series"], queryFn: getSeries, enabled });
+  return useQuery({
+    queryKey: ["series"],
+    queryFn: getSeries,
+    enabled,
+  });
 }
 
 export function useCreateSeriesMutation() {
@@ -16,7 +22,11 @@ export function useCreateSeriesMutation() {
   return useMutation({
     mutationFn: createSeries,
     onSuccess: () => {
+      toast.success("시리즈가 생성되었습니다.");
       void queryClient.invalidateQueries({ queryKey: ["series"] });
+    },
+    onError: () => {
+      toast.error("시리즈 생성에 실패했습니다.");
     },
   });
 }
@@ -28,7 +38,11 @@ export function useUpdateSeriesMutation() {
     mutationFn: ({ id, name }: { id: number; name: string }) =>
       updateSeries(id, name),
     onSuccess: () => {
+      toast.success("시리즈가 수정되었습니다.");
       void queryClient.invalidateQueries({ queryKey: ["series"] });
+    },
+    onError: () => {
+      toast.error("시리즈 수정에 실패했습니다.");
     },
   });
 }
@@ -39,7 +53,11 @@ export function useDeleteSeriesMutation() {
   return useMutation({
     mutationFn: deleteSeries,
     onSuccess: () => {
+      toast.success("시리즈가 삭제되었습니다.");
       void queryClient.invalidateQueries({ queryKey: ["series"] });
+    },
+    onError: () => {
+      toast.error("시리즈 삭제에 실패했습니다.");
     },
   });
 }

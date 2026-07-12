@@ -1,20 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useSearchParams } from "react-router-dom";
+
 import {
+  deletePost,
   getPost,
   getPostCount,
-  deletePost,
   getPostsByFilterCondition,
   publishPost,
-  type PostPayload,
   updatePost,
+  type PostPayload,
 } from "@/features/post/post-api";
 import { FilterType } from "@/lib/type";
-import { useSearchParams } from "react-router-dom";
 
 export function usePostCountQuery() {
   return useQuery({
     queryKey: ["posts", "count"],
-    queryFn: () => getPostCount(),
+    queryFn: getPostCount,
   });
 }
 
@@ -36,12 +38,12 @@ export function usePostsQuery(
 ) {
   const [searchParams] = useSearchParams();
 
-  const publishStatus: PublishStatus | null = searchParams.get(
+  const publishStatus = searchParams.get(
     "publishStatus",
   ) as PublishStatus | null;
 
   const pageParam = searchParams.get("page");
-  const page = pageParam ? parseInt(pageParam) - 1 : 0;
+  const page = pageParam ? parseInt(pageParam, 10) - 1 : 0;
 
   return useQuery({
     queryKey: ["posts", filterType, filterValue, publishStatus, page],
@@ -56,8 +58,13 @@ export function usePublishPostMutation() {
   return useMutation({
     mutationFn: publishPost,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.invalidateQueries({ queryKey: ["posts", "count"] });
+      toast.success("게시물이 저장되었습니다.");
+
+      void queryClient.invalidateQueries({ queryKey: ["posts"] });
+      void queryClient.invalidateQueries({ queryKey: ["posts", "count"] });
+    },
+    onError: () => {
+      toast.error("게시물 저장에 실패했습니다.");
     },
   });
 }
@@ -69,8 +76,13 @@ export function useUpdatePostMutation() {
     mutationFn: ({ id, payload }: { id: number; payload: PostPayload }) =>
       updatePost(id, payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.invalidateQueries({ queryKey: ["posts", "count"] });
+      toast.success("게시물이 수정되었습니다.");
+
+      void queryClient.invalidateQueries({ queryKey: ["posts"] });
+      void queryClient.invalidateQueries({ queryKey: ["posts", "count"] });
+    },
+    onError: () => {
+      toast.error("게시물 수정에 실패했습니다.");
     },
   });
 }
@@ -81,8 +93,13 @@ export function useDeletePostMutation() {
   return useMutation({
     mutationFn: deletePost,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.invalidateQueries({ queryKey: ["posts", "count"] });
+      toast.success("게시물이 삭제되었습니다.");
+
+      void queryClient.invalidateQueries({ queryKey: ["posts"] });
+      void queryClient.invalidateQueries({ queryKey: ["posts", "count"] });
+    },
+    onError: () => {
+      toast.error("게시물 삭제에 실패했습니다.");
     },
   });
 }
