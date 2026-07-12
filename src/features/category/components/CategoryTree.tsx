@@ -14,7 +14,7 @@ import { useCategoriesQuery } from "@/features/category/hooks/use-categories";
 import { cn } from "@/lib/utils";
 import CategoryCreateForm from "@/components/category/CategoryCreateForm";
 
-function RootDropZone() {
+export function RootDropZone() {
   const { draggedId, dropTargetId, setDropTargetId, onDrop } = useCategoryDnd();
 
   if (!draggedId) return null;
