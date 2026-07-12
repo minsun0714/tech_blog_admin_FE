@@ -25,6 +25,7 @@ export default function PostEditPage() {
     setCategoryId,
     setSeriesId,
     setPostUuid,
+    setPublishStatus,
     reset,
   } = useEditorStore();
 
@@ -36,6 +37,7 @@ export default function PostEditPage() {
       setCategoryId(postData.categoryId);
       setSeriesId(postData.seriesId ?? null);
       setPostUuid(postData.postUuid);
+      setPublishStatus(postData.publishStatus);
     }
   }, [postData]);
 

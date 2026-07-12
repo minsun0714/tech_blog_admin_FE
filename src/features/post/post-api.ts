@@ -1,5 +1,6 @@
 import { http } from "@/lib/http";
 import { FilterType } from "@/lib/type";
+import { PublishStatus } from "./hooks/use-posts";
 
 export type Paged<T> = {
   content: T[];
@@ -17,6 +18,7 @@ export type Post = {
   tagNames: string[];
   categoryId: number;
   seriesId?: number | null;
+  publishStatus: PublishStatus;
 };
 
 export type PostWithUuid = Post & {
@@ -29,7 +31,7 @@ export type PostPayload = {
   tagNames: string[];
   categoryId: number | null;
   seriesId: number | null;
-  publishStatus: "PUBLISHED" | "DRAFTED";
+  publishStatus: PublishStatus;
 };
 
 export const getPostCount = () =>
