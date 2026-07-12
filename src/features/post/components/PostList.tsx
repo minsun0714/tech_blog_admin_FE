@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import {
   PublishStatus,
   useDeletePostMutation,
@@ -21,6 +22,7 @@ import {
 } from "@/features/post/context/PostFilterContext";
 import { Switch } from "@/components/ui/switch";
 import { useSearchParams } from "react-router-dom";
+import PostPagination from "@/features/post/components/PostPagination";
 
 function PostListContent() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -35,12 +37,13 @@ function PostListContent() {
   } = usePostFilter();
 
   const {
-    data: posts,
+    data: postsData,
     isLoading: isLoadingPosts,
     isError: isErrorPosts,
   } = usePostsQuery(activeFilterType, selectedFilterValue);
 
   const { mutate: deletePost } = useDeletePostMutation();
+  
 
   return (
     <Card>
@@ -106,17 +109,20 @@ function PostListContent() {
           />
           <Label>저장된 게시물 조회</Label>
         </div>
+        <div className="flex justify-start text-sm text-slate-400">
+          총 {postsData?.totalElements}개
+        </div>
         {isLoadingPosts && (
           <p className="text-sm text-slate-400">게시글을 불러오는 중입니다.</p>
         )}
         {isErrorPosts && (
           <p className="text-sm text-rose-500">게시글을 불러오지 못했습니다.</p>
         )}
-        {posts?.length === 0 && (
+        {postsData?.content.length === 0 && (
           <p className="text-sm text-slate-400">게시글이 없습니다.</p>
         )}
         <div className="space-y-3">
-          {posts?.map((post) => (
+          {postsData?.content.map((post) => (
             <PostCard
               key={post.postId}
               post={post}
@@ -125,10 +131,16 @@ function PostListContent() {
           ))}
         </div>
       </CardContent>
+      <PostPagination
+        isFisrtPage={postsData?.first || false}
+        isLastPage={postsData?.last || false}
+        totalPages={postsData?.totalPages || 0}
+        currentPage={postsData?.number || 0}
+        setSearchParams={setSearchParams}
+      />
     </Card>
   );
 }
-
 export default function PostList() {
   return (
     <PostFilterProvider>
