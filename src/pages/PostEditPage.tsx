@@ -41,9 +41,7 @@ export default function PostEditPage() {
 
   const {
     message,
-    isDraftPending,
     isPublishPending,
-    handleDraft,
     handlePublish,
     handleGetUuid,
   } = usePostUpdateActions({ postId });
@@ -81,9 +79,7 @@ export default function PostEditPage() {
         content={postData?.content || ""}
         cardTitle={"게시물 수정"}
         message={message}
-        isDraftPending={isDraftPending}
         isPublishPending={isPublishPending}
-        handleDraft={handleDraft}
         handlePublish={handlePublish}
         handleGetUuid={handleGetUuid}
       />

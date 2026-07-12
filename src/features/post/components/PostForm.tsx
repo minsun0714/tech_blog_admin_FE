@@ -14,14 +14,14 @@ import PostSeriesSelect from "@/features/post/components/PostSeriesSelect";
 import PostTagInput from "@/features/post/components/PostTagInput";
 import { useEditorStore } from "@/stores/editor-store";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { PublishStatus } from "../hooks/use-posts";
 
 interface PostFormProps {
   content: string;
   cardTitle: string;
   message: string | null;
-  isDraftPending: boolean;
   isPublishPending: boolean;
-  handleDraft: () => void;
   handlePublish: () => void;
   handleGetUuid: () => Promise<string | null>;
 }
@@ -30,9 +30,7 @@ export default function PostForm({
   content,
   cardTitle,
   message,
-  isDraftPending,
   isPublishPending,
-  handleDraft,
   handlePublish,
   handleGetUuid,
 }: PostFormProps) {
@@ -41,19 +39,35 @@ export default function PostForm({
     tagNames,
     categoryId,
     seriesId,
+    publishStatus,
     setTitle,
     setTagNames,
     setCategoryId,
     setSeriesId,
+    setPublishStatus,
   } = useEditorStore();
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>{cardTitle}</CardTitle>
-        <CardDescription>
-          이미지 드롭 시 임시저장 후 본문에 마크다운 이미지 링크를 삽입합니다.
-        </CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <div>
+          <CardTitle>{cardTitle}</CardTitle>
+          <CardDescription>
+            이미지 드롭 시 임시저장 후 본문에 마크다운 이미지 링크를 삽입합니다.
+          </CardDescription>
+        </div>
+        <div>
+          <span className="ml-2 text-sm text-black">임시저장</span>
+          <Switch
+            checked={publishStatus === PublishStatus.PUBLISHED}
+            onCheckedChange={(checked) =>
+              setPublishStatus(
+                checked ? PublishStatus.PUBLISHED : PublishStatus.DRAFTED,
+              )
+            }
+          />
+          <span className="ml-2 text-sm text-black">저장</span>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
@@ -83,9 +97,7 @@ export default function PostForm({
 
         <PostFormActions
           cardTitle={cardTitle}
-          onDraft={() => handleDraft()}
           onPublish={() => handlePublish()}
-          isDraftPending={isDraftPending}
           isPublishPending={isPublishPending}
           message={message}
         />

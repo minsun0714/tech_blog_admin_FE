@@ -3,7 +3,6 @@ import {
   getPost,
   getPostCount,
   deletePost,
-  draftPost,
   getPostsByFilterCondition,
   publishPost,
   type PostPayload,
@@ -11,27 +10,6 @@ import {
 } from "@/features/post/post-api";
 import { FilterType } from "@/lib/type";
 import { useSearchParams } from "react-router-dom";
-
-function extractLocationHeader(headers: unknown) {
-  const rawHeaders = headers as
-    | {
-        location?: string;
-        Location?: string;
-        get?: (name: string) => string | null | undefined;
-      }
-    | undefined;
-  return (
-    rawHeaders?.location ??
-    rawHeaders?.Location ??
-    rawHeaders?.get?.("location") ??
-    null
-  );
-}
-
-function parsePostIdFromLocation(location: string | null) {
-  const matchedId = location?.match(/\/(\d+)$/)?.[1];
-  return matchedId ? Number.parseInt(matchedId, 10) : null;
-}
 
 export function usePostCountQuery() {
   return useQuery({
@@ -69,23 +47,6 @@ export function usePostsQuery(
     queryKey: ["posts", filterType, filterValue, publishStatus, page],
     queryFn: () =>
       getPostsByFilterCondition(filterType, filterValue, publishStatus, page),
-  });
-}
-
-export function useDraftPostMutation() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (payload: PostPayload) => {
-      const response = await draftPost(payload);
-      const location = extractLocationHeader(response.headers);
-      const postId = parsePostIdFromLocation(location);
-      return { response, postId };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.invalidateQueries({ queryKey: ["posts", "count"] });
-    },
   });
 }
 
