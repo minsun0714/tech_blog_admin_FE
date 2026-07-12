@@ -8,15 +8,11 @@ import {
 import {
   Popover,
   PopoverContent,
-  PopoverDescription,
-  PopoverHeader,
-  PopoverTitle,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
-import PostCategorySelect from "@/features/post/components/PostCategorySelect";
 import PostFormActions from "@/features/post/components/PostFormActions";
 import PostSeriesSelect from "@/features/post/components/PostSeriesSelect";
 import PostTagInput from "@/features/post/components/PostTagInput";
@@ -28,20 +24,20 @@ import {
   CategoryDndProvider,
   useCategoryDnd,
 } from "@/features/category/components/CategoryDndProvider";
-import CategoryCreateForm from "@/features/category/components/CategoryCreateForm";
 import {
   useCategoriesQuery,
+  useCreateCategoryMutation,
   useDeleteCategoryMutation,
   useUpdateCategoryNameMutation,
 } from "@/features/category/hooks/use-categories";
 import { RootDropZone } from "@/features/category/components/CategoryTree";
 import type { CategoryNode as CategoryNodeType } from "@/features/category/category-api";
 import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
 import { GripVertical } from "lucide-react";
+import { usePopover } from "../hooks/use-pop-over";
 
 interface PostFormProps {
   content: string;
@@ -60,6 +56,7 @@ export default function PostForm({
   handlePublish,
   handleGetUuid,
 }: PostFormProps) {
+  const [newCategoryName, setNewCategoryName] = useState("");
   const {
     title,
     tagNames,
@@ -72,8 +69,9 @@ export default function PostForm({
     setSeriesId,
     setPublishStatus,
   } = useEditorStore();
-
+  const { open, setOpen, close } = usePopover();
   const { data, isLoading, isError } = useCategoriesQuery();
+  const createCategoryMutation = useCreateCategoryMutation();
 
   return (
     <Card>
@@ -120,8 +118,6 @@ export default function PostForm({
           <div className="space-y-2">
             <Label>카테고리 *</Label>
 
-            {/* <CategoryCreateForm /> */}
-
             <CategoryDndProvider>
               <Card>
                 <CardContent>
@@ -143,6 +139,7 @@ export default function PostForm({
                           category={category}
                           categoryId={categoryId}
                           setCategoryId={setCategoryId}
+                          createCategoryMutation={createCategoryMutation}
                           depth={0}
                         />
                       ))}
@@ -153,6 +150,41 @@ export default function PostForm({
                       카테고리가 없습니다.
                     </p>
                   )}
+
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger render={<Button variant="secondary" />}>
+                      루트 카테고리 추가
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <div className="space-y-2">
+                        <Label htmlFor="category-name">
+                          루트 카테고리 이름
+                        </Label>
+                        <Input
+                          id="category-name"
+                          value={newCategoryName}
+                          onChange={(event) =>
+                            setNewCategoryName(event.target.value)
+                          }
+                          placeholder="예: 스프링 입문"
+                        />
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          createCategoryMutation.mutateAsync({
+                            name: newCategoryName,
+                            parentId: null,
+                          }).finally(() => {
+                            close();
+                          })
+                        }
+                      >
+                        카테고리 추가
+                      </Button>
+                    </PopoverContent>
+                  </Popover>
                 </CardContent>
               </Card>
             </CategoryDndProvider>
@@ -178,14 +210,18 @@ function CategorySelectNode({
   categoryId,
   setCategoryId,
   depth = 0,
+  createCategoryMutation,
 }: {
   category: CategoryNodeType;
   categoryId: number | null;
   setCategoryId: (id: number) => void;
   depth: number;
+  createCategoryMutation: ReturnType<typeof useCreateCategoryMutation>;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(category.categoryName);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const { open, setOpen, close } = usePopover();
 
   const updateMutation = useUpdateCategoryNameMutation();
   const deleteMutation = useDeleteCategoryMutation();
@@ -289,6 +325,39 @@ function CategorySelectNode({
 
         <div className="flex gap-10">
           <div className="flex gap-2">
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger render={<Button variant="secondary" />}>
+                자식 카테고리 추가
+              </PopoverTrigger>
+              <PopoverContent>
+                <div className="space-y-2">
+                  <Label htmlFor="category-name">자식 카테고리 이름</Label>
+                  <Input
+                    id="category-name"
+                    value={newCategoryName}
+                    onChange={(event) => setNewCategoryName(event.target.value)}
+                    placeholder="예: 스프링 입문"
+                  />
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    createCategoryMutation
+                      .mutateAsync({
+                        name: newCategoryName,
+                        parentId: category.categoryId,
+                      })
+                      .finally(() => {
+                        close();
+                      })
+                  }
+                >
+                  카테고리 추가
+                </Button>
+              </PopoverContent>
+            </Popover>
+
             <Button
               size="sm"
               variant="outline"
@@ -318,6 +387,7 @@ function CategorySelectNode({
               category={child}
               setCategoryId={setCategoryId}
               categoryId={categoryId}
+              createCategoryMutation={createCategoryMutation}
               depth={depth + 1}
             />
           ))}
