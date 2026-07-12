@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  useDraftPostMutation,
   usePublishPostMutation,
   useUpdatePostMutation,
 } from "@/features/post/hooks/use-posts";
@@ -32,16 +31,26 @@ const validatePayload = (
     setMessage("카테고리를 선택해주세요.");
     return false;
   }
+  if (!payload.publishStatus) {
+    setMessage("게시 상태를 선택해주세요.");
+    return false;
+  }
   return true;
 };
 
 export function usePostCreateActions() {
   const navigate = useNavigate();
-  const { title, content, tagNames, categoryId, seriesId, postUuid } =
-    useEditorStore();
+  const {
+    title,
+    content,
+    tagNames,
+    categoryId,
+    seriesId,
+    postUuid,
+    publishStatus,
+  } = useEditorStore();
   const [message, setMessage] = useState<string | null>(null);
 
-  const draftMutation = useDraftPostMutation();
   const publishMutation = usePublishPostMutation();
 
   const payload = useMemo(
@@ -52,24 +61,10 @@ export function usePostCreateActions() {
       categoryId,
       seriesId,
       postUuid,
+      publishStatus,
     }),
-    [title, content, tagNames, categoryId, seriesId, postUuid],
+    [title, content, tagNames, categoryId, seriesId, postUuid, publishStatus],
   );
-
-  const handleDraft = async () => {
-    if (!validatePayload(payload, setMessage)) return;
-
-    try {
-      const result = await draftMutation.mutateAsync(payload);
-      setMessage(
-        result.postId
-          ? `임시저장했습니다. (ID ${result.postId})`
-          : "임시저장했습니다.",
-      );
-    } catch {
-      setMessage("임시저장에 실패했습니다.");
-    }
-  };
 
   const handlePublish = async () => {
     if (!validatePayload(payload, setMessage)) return;
@@ -101,9 +96,7 @@ export function usePostCreateActions() {
 
   return {
     message,
-    isDraftPending: draftMutation.isPending,
     isPublishPending: publishMutation.isPending,
-    handleDraft,
     handlePublish,
     handleGetUuid,
   };
@@ -111,12 +104,18 @@ export function usePostCreateActions() {
 
 export function usePostUpdateActions({ postId }: UsePostUpdateActionsOptions) {
   const navigate = useNavigate();
-  const { title, content, tagNames, categoryId, seriesId, postUuid } =
-    useEditorStore();
+  const {
+    title,
+    content,
+    tagNames,
+    categoryId,
+    seriesId,
+    postUuid,
+    publishStatus,
+  } = useEditorStore();
   const [message, setMessage] = useState<string | null>(null);
 
   const updateMutation = useUpdatePostMutation();
-  const draftMutation = useDraftPostMutation();
 
   const payload = useMemo(
     () => ({
@@ -126,20 +125,10 @@ export function usePostUpdateActions({ postId }: UsePostUpdateActionsOptions) {
       categoryId,
       seriesId,
       postUuid,
+      publishStatus,
     }),
-    [title, content, tagNames, categoryId, seriesId, postUuid],
+    [title, content, tagNames, categoryId, seriesId, postUuid, publishStatus],
   );
-
-  const handleDraft = async () => {
-    if (!validatePayload(payload, setMessage)) return;
-
-    try {
-      await draftMutation.mutateAsync(payload);
-      setMessage("게시물을 임시저장 형태로 수정했습니다.");
-    } catch {
-      setMessage("임시저장에 실패했습니다.");
-    }
-  };
 
   const handlePublish = async () => {
     if (!validatePayload(payload, setMessage)) return;
@@ -171,9 +160,7 @@ export function usePostUpdateActions({ postId }: UsePostUpdateActionsOptions) {
 
   return {
     message,
-    isDraftPending: draftMutation.isPending,
     isPublishPending: updateMutation.isPending,
-    handleDraft,
     handlePublish,
     handleGetUuid,
   };

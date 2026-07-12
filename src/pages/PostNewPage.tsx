@@ -8,9 +8,7 @@ export default function PostNewPage() {
 
   const {
     message,
-    isDraftPending,
     isPublishPending,
-    handleDraft,
     handlePublish,
     handleGetUuid,
   } = usePostCreateActions();
@@ -26,9 +24,7 @@ export default function PostNewPage() {
       content={content}
       cardTitle="새 게시글 작성"
       message={message}
-      isDraftPending={isDraftPending}
       isPublishPending={isPublishPending}
-      handleDraft={handleDraft}
       handlePublish={handlePublish}
       handleGetUuid={handleGetUuid}
     />

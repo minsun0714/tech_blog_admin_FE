@@ -25,6 +25,7 @@ export default function PostEditPage() {
     setCategoryId,
     setSeriesId,
     setPostUuid,
+    setPublishStatus,
     reset,
   } = useEditorStore();
 
@@ -36,14 +37,13 @@ export default function PostEditPage() {
       setCategoryId(postData.categoryId);
       setSeriesId(postData.seriesId ?? null);
       setPostUuid(postData.postUuid);
+      setPublishStatus(postData.publishStatus);
     }
   }, [postData]);
 
   const {
     message,
-    isDraftPending,
     isPublishPending,
-    handleDraft,
     handlePublish,
     handleGetUuid,
   } = usePostUpdateActions({ postId });
@@ -81,9 +81,7 @@ export default function PostEditPage() {
         content={postData?.content || ""}
         cardTitle={"게시물 수정"}
         message={message}
-        isDraftPending={isDraftPending}
         isPublishPending={isPublishPending}
-        handleDraft={handleDraft}
         handlePublish={handlePublish}
         handleGetUuid={handleGetUuid}
       />
