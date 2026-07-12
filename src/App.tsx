@@ -20,6 +20,7 @@ const router = createBrowserRouter([
       { path: "tags", element: <TagsPage /> },
       { path: "categories", element: <CategoriesPage /> },
       { path: "series", element: <SeriesPage /> },
+      { path: "*", element: <div>404 Not Found</div> },
     ],
   },
 ]);
