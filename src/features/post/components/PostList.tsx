@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  PublishStatus,
   useDeletePostMutation,
   usePostsQuery,
 } from "@/features/post/hooks/use-posts";
@@ -18,8 +19,11 @@ import {
   PostFilterProvider,
   usePostFilter,
 } from "@/features/post/context/PostFilterContext";
+import { Switch } from "@/components/ui/switch";
+import { useSearchParams } from "react-router-dom";
 
 function PostListContent() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const {
     activeFilterType,
     selectedFilterValue,
@@ -82,6 +86,25 @@ function PostListContent() {
               </SelectContent>
             </Select>
           </div>
+        </div>
+        <div className="flex justify-end items-center space-x-6 w-full ">
+          <Label>임시저장된 게시물 조회</Label>
+          <Switch
+            defaultChecked={
+              searchParams.get("publishStatus") !== PublishStatus.DRAFTED
+            }
+            onCheckedChange={(checked) => {
+              setSearchParams((prev) => {
+                const params = new URLSearchParams(prev);
+                params.set(
+                  "publishStatus",
+                  checked ? PublishStatus.PUBLISHED : PublishStatus.DRAFTED,
+                );
+                return params;
+              });
+            }}
+          />
+          <Label>저장된 게시물 조회</Label>
         </div>
         {isLoadingPosts && (
           <p className="text-sm text-slate-400">게시글을 불러오는 중입니다.</p>

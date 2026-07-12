@@ -75,15 +75,28 @@ export function PostFilterProvider({ children }: { children: ReactNode }) {
   const { label, placeholder } = FILTER_CONFIG[activeFilterType];
 
   const changeFilterType = (type: FilterType) => {
-    setSearchParams({ type, value: "" });
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      params.set("type", type);
+      params.delete("value");
+      return params;
+    });
   };
 
   const changeFilterValue = (value: string) => {
-    const params: Record<string, string | string[]> =
-      !value || value === "all"
-        ? { type: activeFilterType }
-        : { type: activeFilterType, value };
-    setSearchParams(params);
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+
+      params.set("type", activeFilterType);
+
+      if (!value || value === "all") {
+        params.delete("value");
+      } else {
+        params.set("value", value);
+      }
+
+      return params;
+    });
   };
 
   return (
