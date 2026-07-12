@@ -8,14 +8,14 @@ export default function PostsDashBoardCards() {
     {
       title: "저장된 게시글",
       description: "저장된 게시글 목록을 확인하고 새 게시물을 작성합니다.",
-      to: "/posts",
+      to: "/posts?publishStatus=PUBLISHED",
       count: postCount?.publishedPostCount,
       unit: "편",
     },
     {
       title: "임시저장된 게시글",
       description: "임시저장된 게시글 목록을 확인하고 이어서 작성합니다.",
-      to: "/posts/drafts",
+      to: "/posts?publishStatus=DRAFTED",
       count: postCount?.draftedPostCount,
       unit: "편",
     },
