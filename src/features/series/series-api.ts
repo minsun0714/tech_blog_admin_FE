@@ -9,7 +9,7 @@ export type Paged<T> = {
   last: boolean;
 };
 
-export type Series = { id: number; name: string };
+export type Series = { id: number; name: string, postCount: number };
 
 export const getSeries = (page: number = 0) =>
   http

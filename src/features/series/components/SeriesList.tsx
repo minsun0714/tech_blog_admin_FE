@@ -71,6 +71,7 @@ export default function SeriesList() {
                 <div>
                   <p className="font-semibold text-slate-900">{series.name}</p>
                   <p className="text-xs text-slate-500">ID {series.id}</p>
+                  <p>게시물 수: {series.postCount}개</p>
                 </div>
                 <div className="flex gap-2">
                   <Button
