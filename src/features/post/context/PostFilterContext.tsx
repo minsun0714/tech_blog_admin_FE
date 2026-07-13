@@ -33,7 +33,7 @@ function useAllFilterQueries(activeFilterType: FilterType) {
   });
   const series = useSeriesQuery({ enabled: activeFilterType === "series" });
   const tag = useFetchTags({ enabled: activeFilterType === "tag" });
-  return { category, series, tag } as const;
+  return { category, series: {...series, data: series.data?.content}, tag } as const;
 }
 
 interface FilterContextType {
@@ -71,6 +71,8 @@ export function PostFilterProvider({ children }: { children: ReactNode }) {
     () => FILTER_TRANSFORMS[activeFilterType](activeQuery.data),
     [activeFilterType, activeQuery.data],
   );
+
+  console.log("options", options);
 
   const { label, placeholder } = FILTER_CONFIG[activeFilterType];
 

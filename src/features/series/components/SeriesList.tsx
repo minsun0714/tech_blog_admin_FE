@@ -33,7 +33,8 @@ export default function SeriesList() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const updateMutation = useUpdateSeriesMutation();
   const deleteMutation = useDeleteSeriesMutation();
-  const currentSeries = data?.find((series) => series.id === editingId) ?? null;
+  const currentSeries =
+    data?.content.find((series) => series.id === editingId) ?? null;
 
   const handleUpdate = async (id: number, name: string) => {
     await updateMutation.mutateAsync({ id, name });
@@ -57,9 +58,9 @@ export default function SeriesList() {
         {isError ? (
           <p className="text-sm text-rose-500">시리즈를 불러오지 못했습니다.</p>
         ) : null}
-        {data?.length ? (
+        {data?.content.length ? (
           <div className="space-y-3">
-            {data.map((series) => (
+            {data.content.map((series) => (
               <div
                 key={series.id}
                 className="flex items-center justify-between rounded-xl border border-violet-100 bg-violet-50/40 px-4 py-3 cursor-pointer hover:bg-violet-50"

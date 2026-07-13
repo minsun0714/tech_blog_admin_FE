@@ -7,11 +7,17 @@ import {
   getSeries,
   updateSeries,
 } from "@/features/series/series-api";
+import { useSearchParams } from "react-router-dom";
 
 export function useSeriesQuery({ enabled }: { enabled?: boolean } = {}) {
+  const [searchParams] = useSearchParams();
+
+  const pageParam = searchParams.get("page");
+  const page = pageParam ? parseInt(pageParam, 10) - 1 : 0;
+
   return useQuery({
-    queryKey: ["series"],
-    queryFn: getSeries,
+    queryKey: ["series", page],
+    queryFn: () => getSeries(page),
     enabled,
   });
 }

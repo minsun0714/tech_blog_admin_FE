@@ -1,11 +1,20 @@
 import { http } from "@/lib/http";
 
+export type Paged<T> = {
+  content: T[];
+  number: number;
+  totalPages: number;
+  totalElements: number;
+  first: boolean;
+  last: boolean;
+};
+
 export type Series = { id: number; name: string };
 
-export const getSeries = () =>
+export const getSeries = (page: number = 0) =>
   http
-    .get<{ seriesResponseList: Series[] }>("/api/series")
-    .then((r) => r.data.seriesResponseList);
+    .get<Paged<Series>>("/api/series", { params: { page } })
+    .then((r) => r.data);
 export const createSeries = (name: string) =>
   http.post<{ id: number }>("/api/series", { name }).then((r) => r.data);
 export const updateSeries = (id: number, name: string) =>
