@@ -53,7 +53,7 @@ export default function PostSeriesSelect({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value={NONE_VALUE}>선택 안 함</SelectItem>
-            {(series ?? []).map((item) => (
+            {series?.content?.map((item) => (
               <SelectItem key={item.id} value={String(item.id)}>
                 {item.name}
               </SelectItem>
