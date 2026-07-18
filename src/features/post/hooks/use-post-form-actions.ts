@@ -48,6 +48,7 @@ export function usePostCreateActions() {
     seriesId,
     postUuid,
     publishStatus,
+    thumbnailImageUrl,
   } = useEditorStore();
   const [message, setMessage] = useState<string | null>(null);
 
@@ -62,8 +63,9 @@ export function usePostCreateActions() {
       seriesId,
       postUuid,
       publishStatus,
+      thumbnailImageUrl,
     }),
-    [title, content, tagNames, categoryId, seriesId, postUuid, publishStatus],
+    [title, content, tagNames, categoryId, seriesId, postUuid, publishStatus, thumbnailImageUrl],
   );
 
   const handlePublish = async () => {
@@ -112,6 +114,7 @@ export function usePostUpdateActions({ postId }: UsePostUpdateActionsOptions) {
     seriesId,
     postUuid,
     publishStatus,
+    thumbnailImageUrl,
   } = useEditorStore();
   const [message, setMessage] = useState<string | null>(null);
 
@@ -126,8 +129,9 @@ export function usePostUpdateActions({ postId }: UsePostUpdateActionsOptions) {
       seriesId,
       postUuid,
       publishStatus,
+      thumbnailImageUrl,
     }),
-    [title, content, tagNames, categoryId, seriesId, postUuid, publishStatus],
+    [title, content, tagNames, categoryId, seriesId, postUuid, publishStatus, thumbnailImageUrl],
   );
 
   const handlePublish = async () => {

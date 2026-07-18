@@ -23,6 +23,7 @@ export type Post = {
 
 export type PostWithUuid = Post & {
   postUuid: string;
+  thumbnailImageUrl?: string | null;
 };
 
 export type PostPayload = {
