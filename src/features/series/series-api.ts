@@ -1,11 +1,12 @@
 import { http } from "@/lib/http";
+import { Paged } from '../post/post-api';
 
 export type Series = { id: number; name: string };
 
 export const getSeries = () =>
   http
-    .get<{ seriesResponseList: Series[] }>("/api/series")
-    .then((r) => r.data.seriesResponseList);
+    .get<Paged<Series>>("/api/series")
+    .then((r) => r.data);
 export const createSeries = (name: string) =>
   http.post<{ id: number }>("/api/series", { name }).then((r) => r.data);
 export const updateSeries = (id: number, name: string) =>
