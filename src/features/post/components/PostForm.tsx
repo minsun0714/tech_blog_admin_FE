@@ -16,6 +16,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { PublishStatus } from "../hooks/use-posts";
 import { CategorySelect } from "./CategorySelect";
+import ThumbnailImageDropZone from './ThumbnailImageDropZone';
+import {
+  Attachment,
+  AttachmentMedia,
+} from "@/components/ui/attachment";
 
 interface PostFormProps {
   content: string;
@@ -40,6 +45,7 @@ export default function PostForm({
     categoryId,
     seriesId,
     publishStatus,
+    thumbnailImageUrl,
     setTitle,
     setTagNames,
     setCategoryId,
@@ -85,10 +91,32 @@ export default function PostForm({
             <Label>본문 *</Label>
             <SimpleEditor content={content} handleGetUuid={handleGetUuid} />
           </div>
+
+          <div className="space-y-2">
+            <Label>썸네일 이미지</Label>
+            {thumbnailImageUrl && (
+              <Attachment
+                className="w-full"
+                key="thumbnail"
+                orientation="vertical"
+              >
+                <AttachmentMedia variant="image">
+                  <img
+                    src={thumbnailImageUrl}
+                    alt="Thumbnail"
+                    className="aspect-auto rounded-md object-cover"
+                  />
+                </AttachmentMedia>
+              </Attachment>
+            )}
+            <ThumbnailImageDropZone />
+          </div>
+
           <div className="space-y-2">
             <Label>태그</Label>
             <PostTagInput value={tagNames} onChange={setTagNames} />
           </div>
+
           <CategorySelect
             categoryId={categoryId}
             setCategoryId={setCategoryId}

@@ -26,11 +26,13 @@ export default function PostEditPage() {
     setSeriesId,
     setPostUuid,
     setPublishStatus,
+    setThumbnailImageUrl,
     reset,
   } = useEditorStore();
 
   useEffect(() => {
     if (postData) {
+      console.log("image", postData);
       setTitle(postData.title);
       setContent(postData.content);
       setTagNames(postData.tagNames);
@@ -38,6 +40,7 @@ export default function PostEditPage() {
       setSeriesId(postData.seriesId ?? null);
       setPostUuid(postData.postUuid);
       setPublishStatus(postData.publishStatus);
+      setThumbnailImageUrl(postData.thumbnailImageUrl ?? null);
     }
   }, [postData]);
 

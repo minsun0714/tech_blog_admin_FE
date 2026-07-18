@@ -9,6 +9,7 @@ type EditorState = {
   seriesId: number | null;
   postUuid: string | null;
   publishStatus: PublishStatus;
+  thumbnailImageUrl: string | null;
   setTitle: (title: string) => void;
   setContent: (content: string) => void;
   setTagNames: (tags: string[]) => void;
@@ -16,6 +17,7 @@ type EditorState = {
   setSeriesId: (id: number | null) => void;
   setPostUuid: (uuid: string | null) => void;
   setPublishStatus: (status: PublishStatus) => void;
+  setThumbnailImageUrl: (url: string | null) => void;
   reset: () => void;
 };
 
@@ -27,6 +29,7 @@ const initialState = {
   seriesId: null,
   postUuid: null,
   publishStatus: PublishStatus.PUBLISHED,
+  thumbnailImageUrl: null,
 };
 
 export const useEditorStore = create<EditorState>((set) => ({
@@ -38,5 +41,6 @@ export const useEditorStore = create<EditorState>((set) => ({
   setSeriesId: (seriesId) => set({ seriesId }),
   setPostUuid: (postUuid) => set({ postUuid }),
   setPublishStatus: (publishStatus: PublishStatus) => set({ publishStatus }),
+  setThumbnailImageUrl: (thumbnailImageUrl: string | null) => set({ thumbnailImageUrl }),
   reset: () => set(initialState),
 }));
