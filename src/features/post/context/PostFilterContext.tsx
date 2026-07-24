@@ -5,6 +5,8 @@ import { useCategoriesQuery } from "@/features/category/hooks/use-categories";
 import { useFetchTags } from "@/features/tag/hooks/use-tags";
 import { flattenCategories } from "@/features/category/category-api";
 import { useSeriesQuery } from "@/features/series/hooks/use-series";
+import { Series } from "@/features/series/series-api";
+import { Paged } from "@/features/post/post-api";
 
 export interface FilterOption {
   id: number;
@@ -23,7 +25,8 @@ export const FILTER_CONFIG: Record<
 const FILTER_TRANSFORMS = {
   category: (data: unknown) =>
     flattenCategories((data as Parameters<typeof flattenCategories>[0]) ?? []),
-  series: (data: unknown) => (data as FilterOption[] | undefined) ?? [],
+  series: (data: unknown) =>
+    (data as Paged<Series> | undefined)?.content ?? [],
   tag: (data: unknown) => (data as FilterOption[] | undefined) ?? [],
 } satisfies Record<FilterType, (data: unknown) => FilterOption[]>;
 
