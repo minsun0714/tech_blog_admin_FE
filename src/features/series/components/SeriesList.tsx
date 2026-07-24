@@ -72,14 +72,14 @@ export default function SeriesList() {
                   <p className="font-semibold text-slate-900">{series.name}</p>
                   <p className="text-xs text-slate-500">ID {series.id}</p>
                 </div>
-                <div className="flex gap-2">
+                <div
+                  className="flex gap-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setEditingId(series.id);
-                    }}
+                    onClick={() => setEditingId(series.id)}
                   >
                     수정
                   </Button>
@@ -109,10 +109,9 @@ export default function SeriesList() {
                       <AlertDialogFooter>
                         <AlertDialogCancel>취소</AlertDialogCancel>
                         <AlertDialogAction
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            void deleteMutation.mutateAsync(series.id);
-                          }}
+                          onClick={() =>
+                            void deleteMutation.mutateAsync(series.id)
+                          }
                         >
                           계속
                         </AlertDialogAction>
