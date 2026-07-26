@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import MainHeader from "@/components/layout/MainHeader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 
@@ -14,22 +14,38 @@ const NAV_ITEMS = [
 
 export default function RootLayout() {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isHamburgerOpen) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsHamburgerOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [isHamburgerOpen]);
+
   return (
     <div className="flex min-h-screen min-w-0 bg-linear-to-b from-violet-50 to-white">
       {isHamburgerOpen ? (
         <button
           type="button"
           aria-label="메뉴 닫기"
-          className="fixed inset-0 z-40 bg-slate-950/25 backdrop-blur-[1px] md:hidden"
+          className="fixed inset-0 z-40 bg-slate-950/25 backdrop-blur-[1px]"
           onClick={() => setIsHamburgerOpen(false)}
         />
       ) : null}
       <aside
+        id="admin-sidebar"
+        aria-hidden={!isHamburgerOpen}
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-72 shrink-0 overflow-y-auto border-r border-violet-100 bg-white px-4 py-8 shadow-lg transition-transform duration-200 md:sticky md:top-0 md:h-screen md:w-64 md:translate-x-0 md:shadow-sm",
+          "fixed inset-y-0 left-0 z-50 w-72 shrink-0 overflow-y-auto border-r border-violet-100 bg-white px-4 py-8 shadow-lg transition-[transform,visibility] duration-200",
           isHamburgerOpen
-            ? "translate-x-0"
-            : "-translate-x-full",
+            ? "visible translate-x-0"
+            : "invisible -translate-x-full",
         )}
       >
         <div className="mb-8 flex items-start justify-between">
@@ -42,7 +58,7 @@ export default function RootLayout() {
           <button
             type="button"
             aria-label="메뉴 닫기"
-            className="rounded-lg p-2 hover:bg-violet-50 md:hidden"
+            className="rounded-lg p-2 hover:bg-violet-50"
             onClick={() => setIsHamburgerOpen(false)}
           >
             <X color="black" size={20} />
