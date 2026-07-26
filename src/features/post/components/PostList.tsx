@@ -20,9 +20,9 @@ import {
   PostFilterProvider,
   usePostFilter,
 } from "@/features/post/context/PostFilterContext";
-import { Switch } from "@/components/ui/switch";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import PostPagination from "@/features/post/components/PostPagination";
+import { cn } from "@/lib/utils";
 
 function PostListContent() {
   const navigate = useNavigate();
@@ -44,7 +44,19 @@ function PostListContent() {
   } = usePostsQuery(activeFilterType, selectedFilterValue);
 
   const { mutate: deletePost } = useDeletePostMutation();
-  
+  const publishStatus =
+    searchParams.get("publishStatus") === PublishStatus.DRAFTED
+      ? PublishStatus.DRAFTED
+      : PublishStatus.PUBLISHED;
+
+  const changePublishStatus = (status: PublishStatus) => {
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      params.set("publishStatus", status);
+      params.delete("page");
+      return params;
+    });
+  };
 
   return (
     <Card>
@@ -91,27 +103,37 @@ function PostListContent() {
             </Select>
           </div>
         </div>
-        <div className="flex justify-end items-center space-x-6 w-full ">
-          <Label>임시저장된 게시물 조회</Label>
-          <Switch
-            defaultChecked={
-              searchParams.get("publishStatus") !== PublishStatus.DRAFTED
-            }
-            onCheckedChange={(checked) => {
-              setSearchParams((prev) => {
-                const params = new URLSearchParams(prev);
-                params.set(
-                  "publishStatus",
-                  checked ? PublishStatus.PUBLISHED : PublishStatus.DRAFTED,
-                );
-                return params;
-              });
-            }}
-          />
-          <Label>저장된 게시물 조회</Label>
-        </div>
+        <fieldset className="space-y-2">
+          <legend className="text-sm font-medium text-slate-700">
+            게시글 상태
+          </legend>
+          <div className="grid w-full grid-cols-2 rounded-xl bg-slate-100 p-1 sm:ml-auto sm:w-fit sm:min-w-72">
+            {[
+              { value: PublishStatus.PUBLISHED, label: "발행된 글" },
+              { value: PublishStatus.DRAFTED, label: "임시저장" },
+            ].map((option) => {
+              const isActive = publishStatus === option.value;
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  aria-pressed={isActive}
+                  onClick={() => changePublishStatus(option.value)}
+                  className={cn(
+                    "rounded-lg px-4 py-2 text-sm font-semibold transition",
+                    isActive
+                      ? "bg-white text-violet-700 shadow-sm"
+                      : "text-slate-500 hover:text-slate-800",
+                  )}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
         <div className="flex justify-start text-sm text-slate-400">
-          총 {postsData?.totalElements}개
+          {isLoadingPosts ? "게시글 수 확인 중" : `총 ${postsData?.totalElements ?? 0}개`}
         </div>
         {isLoadingPosts && (
           <p className="text-sm text-slate-400">게시글을 불러오는 중입니다.</p>

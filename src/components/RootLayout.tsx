@@ -14,16 +14,22 @@ const NAV_ITEMS = [
 
 export default function RootLayout() {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
-  console.log("isHamburgerOpen", isHamburgerOpen);
   return (
-    <div className="flex min-h-screen bg-linear-to-b from-violet-50 to-white">
+    <div className="flex min-h-screen min-w-0 bg-linear-to-b from-violet-50 to-white">
+      {isHamburgerOpen ? (
+        <button
+          type="button"
+          aria-label="메뉴 닫기"
+          className="fixed inset-0 z-40 bg-slate-950/25 backdrop-blur-[1px] md:hidden"
+          onClick={() => setIsHamburgerOpen(false)}
+        />
+      ) : null}
       <aside
         className={cn(
-          "max-w-120 shrink-0 border-r border-violet-100 bg-white px-4 py-8 shadow-sm",
+          "fixed inset-y-0 left-0 z-50 w-72 shrink-0 overflow-y-auto border-r border-violet-100 bg-white px-4 py-8 shadow-lg transition-transform duration-200 md:sticky md:top-0 md:h-screen md:w-64 md:translate-x-0 md:shadow-sm",
           isHamburgerOpen
-            ? "w-1/2 min-w-80 absolute z-80 h-full"
-            : "w-0 overflow-hidden px-0",
-          "md:block",
+            ? "translate-x-0"
+            : "-translate-x-full",
         )}
       >
         <div className="mb-8 flex items-start justify-between">
@@ -33,7 +39,12 @@ export default function RootLayout() {
             </p>
             <p className="mb-8 text-lg font-bold text-slate-900">Admin</p>
           </div>
-          <button onClick={() => setIsHamburgerOpen(false)}>
+          <button
+            type="button"
+            aria-label="메뉴 닫기"
+            className="rounded-lg p-2 hover:bg-violet-50 md:hidden"
+            onClick={() => setIsHamburgerOpen(false)}
+          >
             <X color="black" size={20} />
           </button>
         </div>
@@ -46,31 +57,27 @@ export default function RootLayout() {
         </div>
         <nav className="flex flex-col items-start gap-2">
           {NAV_ITEMS.map(({ to, label, end }) => (
-            <button
+            <NavLink
+              to={to}
+              end={end}
               onClick={() => setIsHamburgerOpen(false)}
-              className="w-full "
               key={to}
+              className={({ isActive }) =>
+                [
+                  "block w-full rounded-xl px-4 py-2.5 text-sm font-medium transition",
+                  isActive
+                    ? "bg-violet-100 text-violet-800"
+                    : "text-slate-600 hover:bg-violet-50 hover:text-violet-700",
+                ].join(" ")
+              }
             >
-              <NavLink
-                to={to}
-                end={end}
-                className={({ isActive }) =>
-                  [
-                    "block rounded-xl px-4 py-2.5 text-sm font-medium transition",
-                    isActive
-                      ? "bg-violet-100 text-violet-800"
-                      : "text-slate-600 hover:bg-violet-50 hover:text-violet-700",
-                  ].join(" ")
-                }
-              >
-                {label}
-              </NavLink>
-            </button>
+              {label}
+            </NavLink>
           ))}
         </nav>
       </aside>
 
-      <main className="flex-1 p-8 max-w-full">
+      <main className="min-w-0 max-w-full flex-1 p-4 sm:p-6 lg:p-8">
         <MainHeader
           isHamburgerOpen={isHamburgerOpen}
           setIsHamburgerOpen={setIsHamburgerOpen}

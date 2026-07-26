@@ -15,16 +15,19 @@ export default function PostFormActions({
 }: PostFormActionsProps) {
   return (
     <div className="space-y-2">
-      <div className="flex flex-wrap gap-2">
+      <div className="flex items-center justify-end gap-3">
+        {message ? (
+          <p className="mr-auto text-sm text-slate-500">{message}</p>
+        ) : null}
         <Button
-          variant="secondary"
+          size="lg"
           onClick={onPublish}
           disabled={isPublishPending}
+          className="min-w-32"
         >
           {isPublishPending ? "처리 중..." : cardTitle}
         </Button>
       </div>
-      {message ? <p className="text-sm text-slate-500">{message}</p> : null}
     </div>
   );
 }
