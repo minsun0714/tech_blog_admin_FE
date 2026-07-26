@@ -6,7 +6,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import PostFormActions from "@/features/post/components/PostFormActions";
 import PostSeriesSelect from "@/features/post/components/PostSeriesSelect";
@@ -54,29 +53,32 @@ export default function PostForm({
   } = useEditorStore();
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+    <Card className="min-w-0 overflow-visible">
+      <CardHeader className="flex flex-col items-start justify-between gap-4 space-y-0 pb-2 sm:flex-row sm:items-center">
         <div>
           <CardTitle>{cardTitle}</CardTitle>
           <CardDescription>
             이미지 드롭 시 임시저장 후 본문에 마크다운 이미지 링크를 삽입합니다.
           </CardDescription>
         </div>
-        <div>
-          <span className="ml-2 text-sm text-black">임시저장</span>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-slate-600">발행 상태</span>
           <Switch
             checked={publishStatus === PublishStatus.PUBLISHED}
+            aria-label="게시글 발행 상태"
             onCheckedChange={(checked) =>
               setPublishStatus(
                 checked ? PublishStatus.PUBLISHED : PublishStatus.DRAFTED,
               )
             }
           />
-          <span className="ml-2 text-sm text-black">저장</span>
+          <span className="min-w-12 text-sm font-semibold text-slate-900">
+            {publishStatus === PublishStatus.PUBLISHED ? "발행" : "임시저장"}
+          </span>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div>
+      <CardContent className="space-y-6 p-4 sm:p-6">
+        <div className="min-w-0 space-y-6">
           <div className="space-y-2 max-w-full">
             <Label htmlFor="post-title">제목 *</Label>
             <Textarea
@@ -124,14 +126,14 @@ export default function PostForm({
           <PostSeriesSelect value={seriesId} onChange={setSeriesId} />
         </div>
 
-        <Separator />
-
-        <PostFormActions
-          cardTitle={cardTitle}
-          onPublish={() => handlePublish()}
-          isPublishPending={isPublishPending}
-          message={message}
-        />
+        <div className="sticky bottom-3 z-30 -mx-2 rounded-xl border border-violet-100 bg-white/95 p-3 shadow-lg backdrop-blur sm:mx-0">
+          <PostFormActions
+            cardTitle={cardTitle}
+            onPublish={() => handlePublish()}
+            isPublishPending={isPublishPending}
+            message={message}
+          />
+        </div>
       </CardContent>
     </Card>
   );
