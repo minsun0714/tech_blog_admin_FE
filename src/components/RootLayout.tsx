@@ -34,7 +34,7 @@ export default function RootLayout() {
         <button
           type="button"
           aria-label="메뉴 닫기"
-          className="fixed inset-0 z-40 bg-slate-950/25 backdrop-blur-[1px]"
+          className="fixed inset-0 z-[90] bg-slate-950/25 backdrop-blur-[1px]"
           onClick={() => setIsHamburgerOpen(false)}
         />
       ) : null}
@@ -42,7 +42,7 @@ export default function RootLayout() {
         id="admin-sidebar"
         aria-hidden={!isHamburgerOpen}
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-72 shrink-0 overflow-y-auto border-r border-violet-100 bg-white px-4 py-8 shadow-lg transition-[transform,visibility] duration-200",
+          "fixed inset-y-0 left-0 z-[100] w-72 shrink-0 overflow-y-auto border-r border-violet-100 bg-white px-4 py-8 shadow-lg transition-[transform,visibility] duration-200",
           isHamburgerOpen
             ? "visible translate-x-0"
             : "invisible -translate-x-full",
