@@ -1,54 +1,25 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
-body {
+.simple-editor-wrapper {
   --tt-toolbar-height: 44px;
   --tt-theme-text: var(--tt-gray-light-900);
-  --tt-bg-color: var(--tt-gray-light-100);
-
-  .dark & {
-    --tt-theme-text: var(--tt-gray-dark-900);
-    --tt-bg-color: black;
-  }
-}
-
-body {
-  font-family: "Inter", sans-serif;
+  --tt-bg-color: var(--white);
   color: var(--tt-theme-text);
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  padding: 0;
-  overscroll-behavior-y: none;
-}
-
-html,
-body {
-  overscroll-behavior-x: none;
-}
-
-html,
-body,
-#root,
-#app {
-  height: 100%;
   background-color: var(--tt-bg-color);
-}
-
-::-webkit-scrollbar {
-  width: 0.25rem;
-}
-
-* {
   scrollbar-width: thin;
   scrollbar-color: var(--tt-scrollbar-color) transparent;
 }
 
-::-webkit-scrollbar-thumb {
+.simple-editor-wrapper *::-webkit-scrollbar {
+  width: 0.25rem;
+}
+
+.simple-editor-wrapper *::-webkit-scrollbar-thumb {
   background-color: var(--tt-scrollbar-color);
   border-radius: 9999px;
 }
 
-::-webkit-scrollbar-track {
+.simple-editor-wrapper *::-webkit-scrollbar-track {
   background: transparent;
 }
 
