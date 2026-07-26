@@ -22,8 +22,10 @@ export default function MainHeader({
       <div className="flex items-center justify-between gap-4">
         <button
           type="button"
-          aria-label="메뉴 열기"
-          className="rounded-lg p-2 text-slate-600 hover:bg-violet-50 hover:text-violet-700 md:hidden"
+          aria-label={isHamburgerOpen ? "메뉴 닫기" : "메뉴 열기"}
+          aria-controls="admin-sidebar"
+          aria-expanded={isHamburgerOpen}
+          className="rounded-lg p-2 text-slate-600 hover:bg-violet-50 hover:text-violet-700"
           onClick={() => setIsHamburgerOpen(!isHamburgerOpen)}
         >
           <Menu size={20} />
