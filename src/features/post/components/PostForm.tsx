@@ -66,29 +66,35 @@ export default function PostForm({
               : "썸네일과 게시물 분류 정보를 설정해주세요."}
           </CardDescription>
         </div>
-        <div className="flex items-center gap-3" aria-label="게시물 작성 단계">
-          <span
+        <nav className="flex items-center gap-2" aria-label="게시물 작성 단계">
+          <button
+            type="button"
+            aria-current={step === 1 ? "step" : undefined}
+            onClick={() => setStep(1)}
             className={
               step === 1
-                ? "text-sm font-semibold text-violet-700"
-                : "text-sm text-slate-400"
+                ? "rounded-lg bg-violet-100 px-3 py-2 text-sm font-semibold text-violet-700"
+                : "rounded-lg px-3 py-2 text-sm text-slate-500 transition hover:bg-violet-50 hover:text-violet-700"
             }
           >
             1. 내용 작성
-          </span>
+          </button>
           <span className="text-slate-300" aria-hidden="true">
             /
           </span>
-          <span
+          <button
+            type="button"
+            aria-current={step === 2 ? "step" : undefined}
+            onClick={() => setStep(2)}
             className={
               step === 2
-                ? "text-sm font-semibold text-violet-700"
-                : "text-sm text-slate-400"
+                ? "rounded-lg bg-violet-100 px-3 py-2 text-sm font-semibold text-violet-700"
+                : "rounded-lg px-3 py-2 text-sm text-slate-500 transition hover:bg-violet-50 hover:text-violet-700"
             }
           >
             2. 발행 정보
-          </span>
-        </div>
+          </button>
+        </nav>
       </CardHeader>
       <CardContent className="space-y-6 p-4 sm:p-6">
         <div className={step === 1 ? "min-w-0 space-y-6" : "hidden"}>
@@ -173,8 +179,9 @@ export default function PostForm({
                 size="lg"
                 variant="outline"
                 onClick={() => setStep(1)}
+                className="min-w-28"
               >
-                이전
+                이전: 내용 작성
               </Button>
               <div className="min-w-0 flex-1">
                 <PostFormActions

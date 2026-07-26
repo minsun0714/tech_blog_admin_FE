@@ -69,7 +69,7 @@ body,
 .simple-editor-content {
   width: 100%;
   min-width: 0;
-  min-height: 24rem;
+  min-height: clamp(36rem, 65vh, 52rem);
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -82,7 +82,7 @@ body,
 
 .simple-editor-content .tiptap.ProseMirror.simple-editor {
   flex: 1;
-  min-height: 24rem;
+  min-height: clamp(36rem, 65vh, 52rem);
   padding: 2rem;
   outline: none;
 }
@@ -93,11 +93,11 @@ body,
   }
 
   .simple-editor-content {
-    min-height: 18rem;
+    min-height: max(28rem, 60vh);
   }
 
   .simple-editor-content .tiptap.ProseMirror.simple-editor {
-    min-height: 18rem;
+    min-height: max(28rem, 60vh);
     padding: 1rem;
   }
 }
